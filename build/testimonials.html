@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=Playfair+Display:ital,wght@0,600;1,500;1,600&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:#888;font-family:"Poppins",sans-serif}
+  .t{position:relative;width:675px;height:1200px;overflow:hidden;background:#fff;margin-bottom:8px}
+  .t canvas{position:absolute;left:0;top:0;width:675px;height:1200px}
+  /* Cada bloco é ajustado por JS ao retângulo exato que o texto original ocupava */
+  .b{position:absolute;white-space:nowrap;transform-origin:left top;line-height:1}
+  .chat{color:#1f2c33;font-weight:400}
+  .cert-t{font-family:"Playfair Display",serif;font-weight:600;color:#1c3a5e}
+  .cert-i{font-family:"Playfair Display",serif;font-style:italic;font-weight:500;color:#1c3a5e}
+</style>
+</head>
+<body>
+<div id="out"></div>
+
+<script src="testimonials-data.js"></script>
+<script>
+/* --------------------------------------------------------------------
+   Inpainting horizontal: apaga o texto original substituindo cada faixa
+   de pixels "de texto" por uma interpolação entre os pixels de fundo à
+   esquerda e à direita. Funciona bem sobre fundo liso (balões, papel do
+   certificado) e sobre o padrão claro do WhatsApp.
+   ------------------------------------------------------------------ */
+/* Preenche a região com a cor de fundo dominante (áreas lisas: página
+   branca, balões do WhatsApp, papel do certificado). */
+function preencherModo(ctx, r) {
+  var img = ctx.getImageData(r.x, r.y, r.w, r.h), d = img.data, hist = {}, melhor = null, max = 0;
+  for (var k = 0; k < d.length; k += 4) {
+    if (d[k + 3] < 200) continue;
+    var lum = 0.299 * d[k] + 0.587 * d[k + 1] + 0.114 * d[k + 2];
+    if (lum < 190) continue;                       // ignora os pixels de texto
+    var key = (d[k] >> 2) + ',' + (d[k + 1] >> 2) + ',' + (d[k + 2] >> 2);
+    var v = (hist[key] = (hist[key] || 0) + 1);
+    if (v > max) { max = v; melhor = [d[k], d[k + 1], d[k + 2]]; }
+  }
+  if (!melhor) return;
+  ctx.fillStyle = 'rgb(' + melhor.join(',') + ')';
+  ctx.fillRect(r.x, r.y, r.w, r.h);
+}
+
+/* Inpainting horizontal com máscara dilatada — usado só onde o fundo tem
+   textura (o bloco "MUY MERECIDO" fica por cima do padrão do WhatsApp). */
+function pintar(ctx, r) {
+  var img = ctx.getImageData(r.x, r.y, r.w, r.h), d = img.data, W = r.w, H = r.h;
+  var mask = new Uint8Array(W * H);
+  for (var i = 0, n = 0; i < d.length; i += 4, n++) {
+    var R = d[i], G = d[i + 1], B = d[i + 2];
+    var mx = Math.max(R, G, B), mn = Math.min(R, G, B);
+    if ((mx - mn) > 30 || mx < 150) mask[n] = 1;   // saturado ou escuro = tinta
+  }
+  // dilata 3px para capturar o contorno suavizado
+  var dil = new Uint8Array(W * H), R2 = 3;
+  for (var y = 0; y < H; y++) for (var x = 0; x < W; x++) {
+    if (!mask[y * W + x]) continue;
+    for (var dy = -R2; dy <= R2; dy++) for (var dx = -R2; dx <= R2; dx++) {
+      var yy = y + dy, xx = x + dx;
+      if (yy >= 0 && yy < H && xx >= 0 && xx < W) dil[yy * W + xx] = 1;
+    }
+  }
+  for (var y2 = 0; y2 < H; y2++) {
+    var x2 = 0;
+    while (x2 < W) {
+      if (!dil[y2 * W + x2]) { x2++; continue; }
+      var st = x2;
+      while (x2 < W && dil[y2 * W + x2]) x2++;
+      var li = st - 1, ri = x2;
+      var lk = li >= 0 ? (y2 * W + li) * 4 : -1;
+      var rk = ri < W ? (y2 * W + ri) * 4 : -1;
+      if (lk < 0 && rk < 0) continue;
+      if (lk < 0) lk = rk;
+      if (rk < 0) rk = lk;
+      var span = x2 - st + 1;
+      for (var q = st; q < x2; q++) {
+        var f = (q - st + 1) / span, kk = (y2 * W + q) * 4;
+        for (var ch = 0; ch < 4; ch++) d[kk + ch] = Math.round(d[lk + ch] * (1 - f) + d[rk + ch] * f);
+      }
+    }
+  }
+  ctx.putImageData(img, r.x, r.y);
+}
+
+function limpar(ctx, r) { (r.tipo === 'pintar' ? pintar : preencherModo)(ctx, r); }
+
+/* Ajusta o bloco ao retângulo alvo: tamanho pela altura, largura por escala. */
+/* Distância do topo da caixa de linha até o topo da maiúscula, medida na
+   própria fonte — garante que o texto novo caia exatamente sobre o antigo. */
+var _m = document.createElement('canvas').getContext('2d');
+function recuoCapitular(fs, peso, familia) {
+  _m.font = (peso || 400) + ' ' + fs + 'px ' + (familia || 'Poppins');
+  var m = _m.measureText('H');
+  var asc = m.fontBoundingBoxAscent, desc = m.fontBoundingBoxDescent;
+  var meiaEntrelinha = (fs - (asc + desc)) / 2;
+  return meiaEntrelinha + (asc - m.actualBoundingBoxAscent);
+}
+
+function fit(el, box) {
+  var fs = box.fs || (box.h / 0.70);          // altura de maiúscula ≈ 0.70em
+  el.style.fontSize = fs + 'px';
+  el.style.left = box.x + 'px';
+  el.style.top = (box.y - recuoCapitular(fs, box.peso, box.familia)) + 'px';
+  var natural = el.getBoundingClientRect().width;
+  var sx = natural > 0 ? box.w / natural : 1;
+  if (box.livre) sx = Math.min(sx, 1);        // blocos de chat não esticam
+  el.style.transform = 'scaleX(' + sx + ')';
+}
+
+function bloco(pai, txt, box, classe, cor, peso) {
+  var el = document.createElement('div');
+  el.className = 'b' + (classe ? ' ' + classe : '');
+  el.textContent = txt;
+  if (cor) el.style.color = cor;
+  if (peso) el.style.fontWeight = peso;
+  pai.appendChild(el);
+  fit(el, box);
+  return el;
+}
+
+/* Bloco centrado dentro de um retângulo (usado no certificado). */
+function blocoCentro(pai, txt, box, classe) {
+  var el = document.createElement('div');
+  el.className = 'b ' + classe;
+  el.textContent = txt;
+  pai.appendChild(el);
+  var fs = box.h / 0.70;
+  el.style.fontSize = fs + 'px';
+  var natural = el.getBoundingClientRect().width;
+  var sx = natural > 0 ? Math.min(box.w / natural, 1) : 1;
+  el.style.transform = 'scaleX(' + sx + ')';
+  el.style.left = (box.x + (box.w - natural * sx) / 2) + 'px';
+  el.style.top = (box.y - recuoCapitular(fs, 600, '"Playfair Display"')) + 'px';
+}
+
+var pronto = (async function () {
+  await document.fonts.ready;
+  var out = document.getElementById('out');
+
+  for (var n = 0; n < window.DEPOIMENTOS.length; n++) {
+    var spec = window.DEPOIMENTOS[n];
+
+    var wrap = document.createElement('div');
+    wrap.className = 't';
+    wrap.id = 'dep' + (n + 1);
+    out.appendChild(wrap);
+
+    /* base limpa */
+    var img = new Image();
+    img.src = spec.base;
+    await img.decode();
+    var cv = document.createElement('canvas');
+    cv.width = 675; cv.height = 1200;
+    var ctx = cv.getContext('2d');
+    ctx.drawImage(img, 0, 0);
+    spec.clean.forEach(function (r) { limpar(ctx, r); });
+
+    /* certificado: limpa as três faixas de texto e reescreve em português */
+    var C = spec.cert, L = spec.CERT, T = spec.CERT_TEXTO;
+    L.limpar.forEach(function (f) {
+      preencherModo(ctx, { x: Math.round(C.x + f.x * C.w), y: Math.round(C.y + f.t * C.h),
+                           w: Math.round(f.w * C.w),       h: Math.round(f.h * C.h) });
+    });
+    wrap.appendChild(cv);
+
+    var box = function (f) {
+      return { x: C.x + f.x * C.w, y: C.y + f.t * C.h, w: f.w * C.w, h: f.h * C.h };
+    };
+    blocoCentro(wrap, T.titulo,    box(L.titulo),    'cert-t');
+    blocoCentro(wrap, T.certifica, box(L.certifica), 'cert-t');
+    blocoCentro(wrap, spec.certNome, box(L.nome),    'cert-i');
+    T.corpo.forEach(function (linha, i) {
+      var b = box(L.corpo);
+      blocoCentro(wrap, linha, { x: b.x, y: b.y + i * b.h, w: b.w, h: b.h * 0.42 }, 'cert-t');
+    });
+    blocoCentro(wrap, T.assinEsq, box(L.assinEsq), 'cert-i');
+    blocoCentro(wrap, T.assinDir, box(L.assinDir), 'cert-i');
+
+    /* textos da arte */
+    spec.text.forEach(function (t) {
+      bloco(wrap, t.s,
+            { x: t.x, y: t.y, w: t.w, h: t.h, fs: t.fs, peso: t.peso, livre: !!t.chat },
+            t.chat ? 'chat' : null, t.c, t.peso);
+    });
+  }
+  document.body.dataset.pronto = '1';
+})();
+</script>
+</body>
+</html>

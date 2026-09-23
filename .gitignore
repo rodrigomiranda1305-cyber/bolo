@@ -1,0 +1,17 @@
+# dependências do gerador de imagens (reinstaláveis com: npm i puppeteer-core)
+build/node_modules/
+build/package-lock.json
+build/package.json
+
+# arquivos temporários dos scripts de geração
+build/_*.html
+build/hero-soerase.png
+build/iso.png
+build/iso.mjs
+build/r2.mjs
+build/probe*.mjs
+
+# sistema
+.DS_Store
+Thumbs.db
+desktop.ini

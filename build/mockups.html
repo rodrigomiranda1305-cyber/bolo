@@ -1,0 +1,370 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:transparent;font-family:"Poppins",sans-serif}
+  /* fundo transparente: os mockups originais têm alfa e ficam sobrepostos
+     a outros blocos por margens negativas — um fundo opaco taparia o conteúdo */
+  .m{position:relative;overflow:hidden;margin-bottom:10px;background:transparent}
+</style>
+</head>
+<body>
+<div id="out"></div>
+
+<script src="mockups-data.js"></script>
+<script>
+/**
+ * Substituição do texto embutido nos mockups.
+ *
+ * O apagamento usa como máscara as PRÓPRIAS letras novas, dilatadas alguns
+ * pixels. Assim o preenchimento acontece só dentro de formas de letra — que
+ * em seguida são cobertas pelo texto em português. A fotografia ao redor
+ * fica intacta, ao contrário de um retângulo cheio.
+ */
+
+/* Aplica ao contexto a mesma transformação usada para desenhar a linha. */
+function aplicarTransforma(ctx, t, fs, sx) {
+  ctx.translate(t.x, t.y);
+  ctx.rotate(t.ang * Math.PI / 180);
+  ctx.scale(sx, 1);
+}
+
+function medirLargura(ctx, txt, fs) {
+  ctx.save();
+  ctx.font = '700 ' + fs + 'px Poppins';
+  var w = ctx.measureText(txt).width;
+  ctx.restore();
+  return w;
+}
+
+/* Quando só uma letra muda (COSTOS→CUSTOS, LIBRO→LIVRO) redesenhamos apenas
+   essa letra: o resto da arte original fica intocado. `completo` serve para
+   calcular a escala da linha inteira e o deslocamento até a letra. */
+function partes(t) {
+  var completo = t.completo || t.s;
+  return { completo: completo, desenhar: t.s, de: t.de || 0 };
+}
+
+function desenharLinha(ctx, t, fs, sx, opts) {
+  var pt = partes(t);
+  ctx.save();
+  aplicarTransforma(ctx, t, fs, sx);
+  ctx.font = '700 ' + fs + 'px Poppins';
+  ctx.textBaseline = 'alphabetic';
+  ctx.fillStyle = opts.cor;
+  if (opts.sombra) {
+    ctx.shadowColor = 'rgba(0,0,0,.35)';
+    ctx.shadowBlur = fs * 0.14;
+    ctx.shadowOffsetY = fs * 0.05;
+  }
+  var dx = ctx.measureText(pt.completo.slice(0, pt.de)).width;
+  /* (x, y) marca o topo da maiúscula, então a linha de base desce uma altura-x */
+  ctx.fillText(pt.desenhar, dx, fs * 0.70);
+  ctx.restore();
+}
+
+/* Preenche os pixels marcados com a média das cores do entorno livre.
+   Usa imagem integral, então cada pixel custa O(1). O resultado é um
+   borrão suave da própria fotografia — sem rastros horizontais nem
+   listras verticais — e fica quase todo coberto pelas letras novas. */
+function apagarPelaMascara(ctx, mascara, W, H, raio) {
+  var R = raio || 12;
+  var bx0 = W, by0 = H, bx1 = -1, by1 = -1;
+  for (var yy = 0; yy < H; yy++) for (var xx = 0; xx < W; xx++) if (mascara[yy * W + xx]) {
+    if (xx < bx0) bx0 = xx; if (xx > bx1) bx1 = xx;
+    if (yy < by0) by0 = yy; if (yy > by1) by1 = yy;
+  }
+  if (bx1 < 0) return;
+  bx0 = Math.max(0, bx0 - R * 2); by0 = Math.max(0, by0 - R * 2);
+  bx1 = Math.min(W - 1, bx1 + R * 2); by1 = Math.min(H - 1, by1 + R * 2);
+
+  var w = bx1 - bx0 + 1, h = by1 - by0 + 1;
+  var img = ctx.getImageData(bx0, by0, w, h), d = img.data;
+
+  /* somas acumuladas de R, G, B e da contagem de pixels livres */
+  var sw = w + 1;
+  var sR = new Float64Array(sw * (h + 1)), sG = new Float64Array(sw * (h + 1)),
+      sB = new Float64Array(sw * (h + 1)), sN = new Float64Array(sw * (h + 1));
+  for (var y = 0; y < h; y++) for (var x = 0; x < w; x++) {
+    /* pixels transparentes têm RGB 0,0,0 e puxariam a média para preto,
+       então só entram na conta os vizinhos livres E opacos */
+    var k0 = (y * w + x) * 4;
+    var livre = (mascara[(by0 + y) * W + (bx0 + x)] || d[k0 + 3] < 200) ? 0 : 1;
+    var k = k0, p = (y + 1) * sw + (x + 1);
+    var pa = y * sw + (x + 1), pb = (y + 1) * sw + x, pc = y * sw + x;
+    sR[p] = d[k] * livre + sR[pa] + sR[pb] - sR[pc];
+    sG[p] = d[k + 1] * livre + sG[pa] + sG[pb] - sG[pc];
+    sB[p] = d[k + 2] * livre + sB[pa] + sB[pb] - sB[pc];
+    sN[p] = livre + sN[pa] + sN[pb] - sN[pc];
+  }
+  function caixa(S, x0, y0, x1, y1) {
+    return S[(y1 + 1) * sw + (x1 + 1)] - S[y0 * sw + (x1 + 1)] - S[(y1 + 1) * sw + x0] + S[y0 * sw + x0];
+  }
+
+  for (var y2 = 0; y2 < h; y2++) for (var x2 = 0; x2 < w; x2++) {
+    if (!mascara[(by0 + y2) * W + (bx0 + x2)]) continue;
+    var r = R, n = 0, ax0, ay0, ax1, ay1;
+    /* amplia o raio até encontrar vizinhos livres suficientes */
+    for (var tent = 0; tent < 4; tent++) {
+      ax0 = Math.max(0, x2 - r); ay0 = Math.max(0, y2 - r);
+      ax1 = Math.min(w - 1, x2 + r); ay1 = Math.min(h - 1, y2 + r);
+      n = caixa(sN, ax0, ay0, ax1, ay1);
+      if (n > 20) break;
+      r *= 2;
+    }
+    if (!(n >= 1)) continue;   // sem vizinho livre: mantém o pixel original
+    var kk = (y2 * w + x2) * 4;
+    d[kk]     = Math.round(caixa(sR, ax0, ay0, ax1, ay1) / n);
+    d[kk + 1] = Math.round(caixa(sG, ax0, ay0, ax1, ay1) / n);
+    d[kk + 2] = Math.round(caixa(sB, ax0, ay0, ax1, ay1) / n);
+  }
+  ctx.putImageData(img, bx0, by0);
+}
+
+/* ------------------------------------------------------------ selo redondo
+   Texto curvado ao longo de um arco. Ângulos em graus, 0° à direita e
+   crescendo no sentido horário. `paraDentro` vira as letras quando o texto
+   corre pela metade de baixo do círculo. */
+function desenharArco(ctx, a) {
+  ctx.save();
+  ctx.font = '700 ' + (a.cap / 0.70) + 'px Poppins';
+  ctx.fillStyle = a.corTexto || '#fff';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  var chars = a.s.split('');
+  var larg = chars.map(function (c) { return ctx.measureText(c).width; });
+  var total = larg.reduce(function (x, y) { return x + y; }, 0);
+  var span = (a.aFim - a.aIni) * Math.PI / 180;
+  var acc = 0;
+  chars.forEach(function (c, i) {
+    var frac = (acc + larg[i] / 2) / total;
+    acc += larg[i];
+    var ang = a.aIni * Math.PI / 180 + frac * span;
+    ctx.save();
+    ctx.translate(a.cx + a.r * Math.cos(ang), a.cy + a.r * Math.sin(ang));
+    ctx.rotate(ang + (a.paraDentro ? -Math.PI / 2 : Math.PI / 2));
+    ctx.fillText(c, 0, 0);
+    ctx.restore();
+  });
+  ctx.restore();
+}
+
+/* Apaga só os pixels claros dentro de um anel (o texto branco do selo),
+   pintando com a cor do anel. A caixa delimita o trecho do arco para não
+   encostar na fita branca que cruza o selo. */
+function apagarAnel(ctx, a) {
+  var x0 = Math.floor(a.cx - a.rExt), y0 = Math.floor(a.cy - a.rExt);
+  var w = Math.ceil(a.rExt * 2), h = Math.ceil(a.rExt * 2);
+  var img = ctx.getImageData(x0, y0, w, h), d = img.data, cor = a.cor;
+  for (var y = 0; y < h; y++) for (var x = 0; x < w; x++) {
+    var px = x0 + x, py = y0 + y;
+    if (a.caixa && (px < a.caixa[0] || px > a.caixa[2] || py < a.caixa[1] || py > a.caixa[3])) continue;
+    var dx = px - a.cx, dy = py - a.cy, rr = Math.sqrt(dx * dx + dy * dy);
+    if (rr < a.rInt || rr > a.rExt) continue;
+    var k = (y * w + x) * 4;
+    if (d[k + 3] < 200) continue;
+    if (Math.min(d[k], d[k + 1], d[k + 2]) < 170) continue;   // só o branco
+    d[k] = cor[0]; d[k + 1] = cor[1]; d[k + 2] = cor[2];
+  }
+  ctx.putImageData(img, x0, y0);
+}
+
+/* Preenche o retângulo com a cor de fundo do cartão. A cor é a mais comum
+   entre os pixels de luminância média — assim o texto branco e a sombra
+   escura ficam de fora. Com `ang`, o retângulo pintado acompanha a
+   inclinação do título, para não comer a lista logo abaixo. */
+function apagarModal(ctx, r) {
+  var img = ctx.getImageData(r.x, r.y, r.w, r.h), d = img.data;
+  var hist = {}, melhor = null, max = 0;
+  for (var k = 0; k < d.length; k += 4) {
+    if (d[k + 3] < 200) continue;
+    var lum = 0.299 * d[k] + 0.587 * d[k + 1] + 0.114 * d[k + 2];
+    if (lum < 60 || lum > 235) continue;
+    var key = (d[k] >> 3) + ',' + (d[k + 1] >> 3) + ',' + (d[k + 2] >> 3);
+    var v = (hist[key] = (hist[key] || 0) + 1);
+    if (v > max) { max = v; melhor = [d[k], d[k + 1], d[k + 2]]; }
+  }
+  if (!melhor) return;
+  ctx.save();
+  ctx.fillStyle = 'rgb(' + melhor.join(',') + ')';
+  if (r.ang) {
+    ctx.translate(r.x, r.y);
+    ctx.rotate(r.ang * Math.PI / 180);
+    ctx.fillRect(0, 0, r.w, r.h);
+  } else {
+    ctx.fillRect(r.x, r.y, r.w, r.h);
+  }
+  ctx.restore();
+}
+
+/* Apaga um retângulo inteiro pela média do entorno — fundo fotográfico. */
+function apagarMedia(ctx, r, W, H) {
+  var mask = new Uint8Array(W * H);
+  for (var y = r.y; y < r.y + r.h; y++)
+    for (var x = r.x; x < r.x + r.w; x++)
+      if (y >= 0 && y < H && x >= 0 && x < W) mask[y * W + x] = 1;
+  apagarPelaMascara(ctx, mask, W, H, r.raio || 10);
+}
+
+/* Apagamento por retângulo, para fundos saturados (o creme rosa do livro
+   ButtercreamPro): marca só o branco e preenche faixas estreitas. */
+function apagarRetangulo(ctx, r) {
+  var img = ctx.getImageData(r.x, r.y, r.w, r.h), d = img.data, W = r.w, H = r.h;
+  var MAX = r.maxTraco || 44;
+  var mask = new Uint8Array(W * H);
+  for (var i = 0, n = 0; i < d.length; i += 4, n++) {
+    var mn = Math.min(d[i], d[i + 1], d[i + 2]), mx = Math.max(d[i], d[i + 1], d[i + 2]);
+    if (mn > 205 && (mx - mn) < 20) mask[n] = 1;
+  }
+  mask = dilatar(mask, W, H, 2);
+  for (var y = 0; y < H; y++) {
+    var x = 0;
+    while (x < W) {
+      if (!mask[y * W + x]) { x++; continue; }
+      var st = x;
+      while (x < W && mask[y * W + x]) x++;
+      if (x - st > MAX) continue;
+      var lk = st - 1 >= 0 ? (y * W + st - 1) * 4 : -1;
+      var rk = x < W ? (y * W + x) * 4 : -1;
+      if (lk < 0 && rk < 0) continue;
+      if (lk < 0) lk = rk;
+      if (rk < 0) rk = lk;
+      var span = x - st + 1;
+      for (var q = st; q < x; q++) {
+        var f = (q - st + 1) / span, kk = (y * W + q) * 4;
+        for (var ch = 0; ch < 3; ch++) d[kk + ch] = Math.round(d[lk + ch] * (1 - f) + d[rk + ch] * f);
+      }
+    }
+  }
+  ctx.putImageData(img, r.x, r.y);
+}
+
+/* Apaga uma faixa inteira interpolando na horizontal entre as bordas.
+   Usado na lombada, cujo fundo é um degradê liso: reconstrói o degradê e
+   remove o texto por completo, sem depender de limiar de cor. */
+function apagarFaixa(ctx, r) {
+  var img = ctx.getImageData(r.x - 1, r.y, r.w + 2, r.h), d = img.data, W = r.w + 2;
+  for (var y = 0; y < r.h; y++) {
+    var lk = (y * W) * 4, rk = (y * W + W - 1) * 4;
+    for (var q = 1; q < W - 1; q++) {
+      var f = q / (W - 1), kk = (y * W + q) * 4;
+      for (var ch = 0; ch < 3; ch++) d[kk + ch] = Math.round(d[lk + ch] * (1 - f) + d[rk + ch] * f);
+    }
+  }
+  ctx.putImageData(img, r.x - 1, r.y);
+}
+
+function dilatar(src, W, H, K) {
+  var out = new Uint8Array(W * H);
+  var bx0 = W, by0 = H, bx1 = -1, by1 = -1;
+  for (var yy = 0; yy < H; yy++) for (var xx = 0; xx < W; xx++) if (src[yy * W + xx]) {
+    if (xx < bx0) bx0 = xx; if (xx > bx1) bx1 = xx;
+    if (yy < by0) by0 = yy; if (yy > by1) by1 = yy;
+  }
+  if (bx1 < 0) return out;
+  for (var y = by0; y <= by1; y++) for (var x = bx0; x <= bx1; x++) {
+    if (!src[y * W + x]) continue;
+    for (var dy = -K; dy <= K; dy++) for (var dx = -K; dx <= K; dx++) {
+      var yy = y + dy, xx = x + dx;
+      if (yy >= 0 && yy < H && xx >= 0 && xx < W) out[yy * W + xx] = 1;
+    }
+  }
+  return out;
+}
+
+(async function () {
+  /* O canvas só encontra a fonte se ela tiver sido realmente baixada — e
+     nada no DOM usa Poppins aqui, então pedimos o download explicitamente. */
+  await Promise.all(['600','700','800'].map(function (w) {
+    return document.fonts.load(w + ' 40px Poppins');
+  }));
+  await document.fonts.ready;
+  var out = document.getElementById('out');
+
+  for (var n = 0; n < window.MOCKUPS.length; n++) {
+    var spec = window.MOCKUPS[n];
+    var W = spec.w, H = spec.h;
+
+    var wrap = document.createElement('div');
+    wrap.className = 'm';
+    wrap.id = 'mk' + n;
+    wrap.style.width = W + 'px';
+    wrap.style.height = H + 'px';
+    out.appendChild(wrap);
+
+    var img = new Image();
+    img.src = spec.base;
+    await img.decode();
+
+    var cv = document.createElement('canvas');
+    cv.width = W; cv.height = H;
+    var ctx = cv.getContext('2d', { willReadFrequently: true });
+    ctx.drawImage(img, 0, 0);
+
+    /* 1 — áreas de fundo liso apagadas por retângulo */
+    (spec.erase || []).forEach(function (r) {
+      if (r.modo === 'faixa')  return apagarFaixa(ctx, r);
+      if (r.modo === 'modal')  return apagarModal(ctx, r);
+      if (r.modo === 'media')  return apagarMedia(ctx, r, W, H);
+      apagarRetangulo(ctx, r);
+    });
+
+    /* 2 — máscara: as letras novas, engrossadas */
+    var mk = document.createElement('canvas');
+    mk.width = W; mk.height = H;
+    var mctx = mk.getContext('2d', { willReadFrequently: true });
+
+    var medidas = spec.text.map(function (t) {
+      var fs = t.cap / 0.70;
+      var nat = medirLargura(mctx, partes(t).completo, fs);
+      return { fs: fs, sx: nat > 0 ? t.w / nat : 1 };
+    });
+
+    mctx.fillStyle = '#fff';
+    spec.text.forEach(function (t, i) {
+      var m = medidas[i];
+      mctx.save();
+      aplicarTransforma(mctx, t, m.fs, m.sx);
+      mctx.font = '700 ' + m.fs + 'px Poppins';
+      mctx.textBaseline = 'alphabetic';
+      /* traço grosso + preenchimento = silhueta um pouco maior que a letra */
+      mctx.lineWidth = Math.max(2, m.fs * (spec.traco || 0.08));
+      mctx.strokeStyle = '#fff';
+      var pt = partes(t);
+      var dx = mctx.measureText(pt.completo.slice(0, pt.de)).width;
+      mctx.strokeText(pt.desenhar, dx, m.fs * 0.70);
+      mctx.fillText(pt.desenhar, dx, m.fs * 0.70);
+      mctx.restore();
+    });
+
+    var md = mctx.getImageData(0, 0, W, H).data;
+    var mask = new Uint8Array(W * H);
+    for (var i = 0, k = 0; i < md.length; i += 4, k++) if (md[i + 3] > 40) mask[k] = 1;
+    mask = dilatar(mask, W, H, spec.dilatar || 2);
+
+    /* 3 — apaga o texto espanhol dentro dessa silhueta */
+    apagarPelaMascara(ctx, mask, W, H, spec.raio);
+
+    /* 4 — selo redondo: apaga o texto curvo e redesenha em português */
+    var SO_ERASE = location.hash === "#soerase";
+    (SO_ERASE ? [] : (spec.arcos || [])).forEach(function (a) {
+      apagarAnel(ctx, a);
+      desenharArco(ctx, a);
+    });
+
+    /* 5 — escreve o texto em português por cima */
+    (SO_ERASE ? [] : spec.text).forEach(function (t, i) {
+      desenharLinha(ctx, t, medidas[i].fs, medidas[i].sx,
+                    { cor: t.cor || '#fff', sombra: !(t.cor || t.semSombra) });
+    });
+
+    wrap.appendChild(cv);
+  }
+  document.body.dataset.pronto = '1';
+})();
+</script>
+</body>
+</html>
