@@ -1,0 +1,3 @@
+# A pasta build/ guarda os fontes das imagens. Vai junto no repositório,
+# mas não deve ser servida ao público.
+Require all denied
