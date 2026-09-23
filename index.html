@@ -368,47 +368,33 @@
   </section>
 
   <!-- ================================================================
-       9 — DEPOIMENTOS
+       9 — CARROSSEL DE DEPOIMENTOS
        ============================================================= -->
   <section class="sec sec--proof">
     <div class="inner">
       <div class="col proof__col">
-
-        <!-- Depoimentos reais de alunas, traduzidos do material original.
-             A LINHA DE CIDADE É UM MARCADOR: preencha com a cidade/UF real de
-             cada aluna antes de publicar, ou remova o <span class="card__local">. -->
-        <div class="w proof__cards-w">
+        <div class="w proof__carousel-w">
           <div class="wc">
-            <div class="depo">
-
-              <figure class="depo__card">
-                <blockquote class="depo__texto">Com suas explicações passo a passo ficou super fácil decorar. De me sentir tão insegura, passei a me sentir uma pro.</blockquote>
-                <figcaption class="depo__autor">
-                  Alejandra Gutiérrez
-                  <span class="depo__local">Cidade / UF</span>
-                </figcaption>
-              </figure>
-
-              <figure class="depo__card">
-                <blockquote class="depo__texto">O creme é a coisa mais espetacular do mundo. É sedoso, gostoso e muito fácil de usar.</blockquote>
-                <figcaption class="depo__autor">
-                  Maria Soledad Urdaneta
-                  <span class="depo__local">Cidade / UF</span>
-                </figcaption>
-              </figure>
-
-              <figure class="depo__card">
-                <blockquote class="depo__texto">Muito feliz com o curso. Fiz bolos de cenoura e de blueberry com ganache de maracujá e cream cheese — minha experiência foi muito boa.</blockquote>
-                <figcaption class="depo__autor">
-                  Carmen Venegas Rambla
-                  <span class="depo__local">Cidade / UF</span>
-                </figcaption>
-              </figure>
-
+            <div class="carousel carousel--proof" data-carousel data-gap="10" data-autoplay="5000">
+              <div class="carousel__viewport">
+                <div class="carousel__track">
+                  <div class="carousel__slide"><div class="carousel__image" role="img" aria-label="Depoimento de aluna" data-bg="assets/img/depoimento-1.webp"></div></div>
+                  <div class="carousel__slide"><div class="carousel__image" role="img" aria-label="Depoimento de aluna" data-bg="assets/img/depoimento-2.webp"></div></div>
+                  <div class="carousel__slide"><div class="carousel__image" role="img" aria-label="Depoimento de aluna" data-bg="assets/img/depoimento-3.webp"></div></div>
+                  <div class="carousel__slide"><div class="carousel__image" role="img" aria-label="Depoimento de aluna" data-bg="assets/img/depoimento-4.webp"></div></div>
+                  <div class="carousel__slide"><div class="carousel__image" role="img" aria-label="Depoimento de aluna" data-bg="assets/img/depoimento-5.webp"></div></div>
+                </div>
+              </div>
+              <button class="carousel__btn carousel__btn--prev" type="button" aria-label="Anterior">
+                <svg viewBox="0 0 1000 1000" aria-hidden="true"><path d="M646 125C629 125 613 133 604 142L308 442C296 454 292 471 292 487 292 504 296 521 308 533L604 854C617 867 629 875 646 875 663 875 679 871 692 858 704 846 713 829 713 812 713 796 708 779 692 767L438 487 692 225C700 217 708 204 708 187 708 171 704 154 692 142 675 129 663 125 646 125Z"/></svg>
+              </button>
+              <button class="carousel__btn carousel__btn--next" type="button" aria-label="Próximo">
+                <svg viewBox="0 0 1000 1000" aria-hidden="true"><path d="M696 533C708 521 713 504 713 487 713 471 708 454 696 446L400 146C388 133 375 125 354 125 338 125 325 129 313 142 300 154 292 171 292 187 292 204 296 221 308 233L563 492 304 771C292 783 288 800 288 817 288 833 296 850 308 863 321 871 338 875 354 875 371 875 388 867 400 854L696 533Z"/></svg>
+              </button>
+              <div class="carousel__pagination" aria-hidden="true"></div>
             </div>
           </div>
         </div>
-
       </div>
     </div>
   </section>
