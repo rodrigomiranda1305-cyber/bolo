@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+
+Disallow: /build/
+
+Sitemap: https://buttercream.pro/sitemap.xml
