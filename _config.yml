@@ -1,9 +1,8 @@
 # Configuração do GitHub Pages.
 # Mantém fora do site publicado tudo que é só de bastidor: os fontes das
-# imagens, o README e o .htaccess (que só teria efeito num servidor Apache,
-# caso um dia o site volte para a Hostinger).
+# imagens e o README. O antigo .htaccess foi para build/ — ele só teria
+# efeito num servidor Apache, caso o site volte um dia para a Hostinger.
 exclude:
   - build
   - README.md
-  - .htaccess
   - .gitignore
