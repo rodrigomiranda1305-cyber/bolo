@@ -25,8 +25,11 @@ window.BP_CONFIG = {
   /* Um único destino para TODOS os CTAs de compra da página. */
   checkoutUrl: 'https://pay.hotmart.com/U89314700I?off=zbtkndix&checkoutMode=10',
 
-  /* Repassa as UTMs da URL atual para o checkout (utm_*, gclid, fbclid). */
-  forwardUtmParams: true,
+  /* Repasse de UTMs feito por conta própria.
+     DESLIGADO porque a UTMify já faz isso — e faz melhor, incluindo os
+     parâmetros xcod/sck que a Hotmart usa para atribuir a venda. Com os dois
+     ligados, um sobrescreveria o outro. Só religue se remover a UTMify. */
+  forwardUtmParams: false,
 
   /* ------------------------------------------------------------- contadores
    * Contadores "evergreen": a duração é em SEGUNDOS e cada contador guarda
@@ -46,6 +49,10 @@ window.BP_CONFIG = {
    * ID correspondente estiver vazio, então não há evento duplicado.
    */
   tracking: {
+    /* UTMify — o pixel é carregado no <head> do index.html lendo este ID.
+       Deixe em branco para desativar. */
+    utmifyPixelId: '6ab55028171efecc30df008a',
+
     metaPixelId: '',   // ex.: '1234567890'
     ga4Id: '',         // ex.: 'G-XXXXXXXXXX'
     gtmId: '',         // ex.: 'GTM-XXXXXXX'
