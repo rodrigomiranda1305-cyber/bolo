@@ -348,6 +348,107 @@
   }
 
   /* =================================================================
+     Persuasão: data de hoje, contador de vagas e card de abertura.
+     Tudo ligado/desligado por config.js → persuasao.
+     ============================================================== */
+  var P = CFG.persuasao || {};
+
+  /** Escreve a data de hoje ("24 de setembro") nos elementos marcados. */
+  function aplicarDataDeHoje() {
+    var alvos = document.querySelectorAll('[data-hoje]');
+    if (!alvos.length) return;
+    var hoje = new Date();
+    if (!P.mostrarDataDeHoje) {
+      esconderSecao('[data-persuasao="barraUrgencia"]');
+      return;
+    }
+    var texto = hoje.toLocaleDateString('pt-BR', { day: 'numeric', month: 'long' });
+    var iso = hoje.getFullYear() + '-' +
+              String(hoje.getMonth() + 1).padStart(2, '0') + '-' +
+              String(hoje.getDate()).padStart(2, '0');
+    for (var i = 0; i < alvos.length; i++) {
+      alvos[i].textContent = texto;
+      alvos[i].setAttribute('datetime', iso);
+    }
+  }
+
+  /** Contador de vagas: começa no valor inicial e baixa uma vez. */
+  function aplicarEscassez() {
+    var wrap = document.querySelector('[data-vagas-wrap]');
+    if (!wrap) return;
+    if (!P.escassezVagas) { wrap.hidden = true; return; }
+
+    var campo = wrap.querySelector('[data-vagas]');
+    campo.textContent = P.vagasIniciais;
+
+    var jaBaixou = false;
+    try { jaBaixou = sessionStorage.getItem('bp_vagas') === 'baixou'; } catch (e) {}
+
+    if (jaBaixou) { campo.textContent = P.vagasFinais; wrap.classList.add('is-baixou'); return; }
+
+    setTimeout(function () {
+      campo.textContent = P.vagasFinais;
+      wrap.classList.add('is-baixou');
+      try { sessionStorage.setItem('bp_vagas', 'baixou'); } catch (e) {}
+    }, (P.segundosParaBaixar || 90) * 1000);
+  }
+
+  function aplicarGarantia() {
+    var dias = P.diasGarantia || 7;
+    var alvos = document.querySelectorAll('[data-garantia-dias]');
+    for (var i = 0; i < alvos.length; i++) alvos[i].textContent = dias;
+  }
+
+  function aplicarPrecoSobe() {
+    if (P.avisoPrecoSobe) return;
+    var avisos = document.querySelectorAll('[data-persuasao="precoSobe"]');
+    for (var i = 0; i < avisos.length; i++) avisos[i].hidden = true;
+  }
+
+  function esconderSecao(seletor) {
+    var el = document.querySelector(seletor);
+    if (el) el.hidden = true;
+  }
+
+  /** Card de abertura: aparece uma vez por sessão. */
+  function iniciarCardAbertura() {
+    var card = document.querySelector('[data-abertura]');
+    if (!card) return;
+    if (!P.cardAbertura) return;
+
+    var jaViu = false;
+    try { jaViu = sessionStorage.getItem('bp_abertura') === 'visto'; } catch (e) {}
+    if (jaViu) return;
+
+    function fechar() {
+      card.hidden = true;
+      document.body.style.overflow = '';
+      try { sessionStorage.setItem('bp_abertura', 'visto'); } catch (e) {}
+      document.removeEventListener('keydown', aoTeclar);
+    }
+    function aoTeclar(ev) { if (ev.key === 'Escape') fechar(); }
+
+    card.querySelectorAll('[data-abertura-fechar]').forEach(function (b) {
+      b.addEventListener('click', fechar);
+    });
+    var sim = card.querySelector('[data-abertura-sim]');
+    if (sim) sim.addEventListener('click', function () {
+      /* a resposta "sim" também serve de sinal de intenção para o tracking */
+      document.dispatchEvent(new CustomEvent('bp:abertura_sim'));
+      fechar();
+    });
+    card.addEventListener('click', function (ev) { if (ev.target === card) fechar(); });
+    document.addEventListener('keydown', aoTeclar);
+
+    /* mostra só depois da primeira pintura, para não atrapalhar o LCP */
+    setTimeout(function () {
+      card.hidden = false;
+      document.body.style.overflow = 'hidden';
+      if (sim) sim.focus();
+    }, 1200);
+  }
+
+  /* =================================================================
      Início
      ============================================================== */
   function init() {
@@ -356,6 +457,11 @@
     initCountdowns();
     initCarousels();
     initReveal();
+    aplicarDataDeHoje();
+    aplicarEscassez();
+    aplicarGarantia();
+    aplicarPrecoSobe();
+    iniciarCardAbertura();
     initTracking();
   }
 

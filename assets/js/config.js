@@ -31,6 +31,37 @@ window.BP_CONFIG = {
      ligados, um sobrescreveria o outro. Só religue se remover a UTMify. */
   forwardUtmParams: false,
 
+  /* ------------------------------------------------------------- persuasão
+   * Blocos de escassez, urgência e prova. Tudo aqui pode ser desligado
+   * colocando `false` — a seção some da página sem quebrar o layout.
+   */
+  persuasao: {
+    /* Card de abertura: a visitante confirma que se identifica com o
+       problema antes de ver a oferta. Aparece uma vez por sessão. */
+    cardAbertura: true,
+
+    /* Data de hoje na barra de urgência, atualizada sozinha. */
+    mostrarDataDeHoje: true,
+
+    /* Contador de vagas. Começa em `vagasIniciais` e, depois de
+       `segundosParaBaixar`, passa para `vagasFinais`.
+       ATENÇÃO: só mantenha ligado se o limite de vagas for real. Anunciar
+       escassez que não existe é propaganda enganosa (CDC, art. 37). */
+    escassezVagas: true,
+    vagasIniciais: 5,
+    vagasFinais: 3,
+    segundosParaBaixar: 90,
+
+    /* Aviso de que o preço sobe. Só mantenha ligado se realmente for subir. */
+    avisoPrecoSobe: true,
+
+    /* Tamanho da equipe de suporte citado nas barras vermelhas. */
+    tamanhoEquipe: 28,
+
+    /* Prazo de garantia legal (CDC art. 49 / Hotmart). */
+    diasGarantia: 7
+  },
+
   /* ------------------------------------------------------------- contadores
    * Contadores "evergreen": a duração é em SEGUNDOS e cada contador guarda
    * sua data-limite no localStorage, exatamente como a página original.

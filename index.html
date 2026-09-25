@@ -79,6 +79,25 @@
   </div>
 </header>
 
+<!-- =====================================================================
+     CARD DE ABERTURA
+     Pergunta de identificação antes da oferta. Aparece uma vez por sessão
+     e some para sempre depois da resposta. Desligue em config.js →
+     persuasao.cardAbertura = false.
+     ================================================================== -->
+<div class="abertura" data-abertura hidden>
+  <div class="abertura__caixa" role="dialog" aria-modal="true" aria-labelledby="abertura-titulo">
+    <p class="abertura__olho">Antes de você ver a oferta</p>
+    <h2 class="abertura__titulo" id="abertura-titulo">Você já perdeu um bolo por causa do calor?</h2>
+    <p class="abertura__txt">Cobertura que derreteu no carro. Recheio que vazou. A cliente recebendo algo diferente do que viu na foto.</p>
+    <div class="abertura__botoes">
+      <button type="button" class="abertura__sim" data-abertura-sim>Sim, já aconteceu comigo</button>
+      <button type="button" class="abertura__nao" data-abertura-fechar>Ainda não, mas tenho medo</button>
+    </div>
+    <button type="button" class="abertura__x" data-abertura-fechar aria-label="Fechar">&times;</button>
+  </div>
+</div>
+
 <main class="page-content">
 
   <!-- ================================================================
@@ -116,12 +135,25 @@
   </section>
 
   <!-- ================================================================
+       1.5 — BARRA DE URGÊNCIA (data de hoje + vagas)
+       ============================================================= -->
+  <section class="sec sec--urgencia" data-persuasao="barraUrgencia">
+    <div class="inner">
+      <p class="urgencia__linha">
+        <span class="urgencia__data">Oferta válida <strong>somente hoje</strong>, <time data-hoje>—</time></span>
+        <span class="urgencia__sep" aria-hidden="true">•</span>
+        <span class="urgencia__vagas" data-vagas-wrap>Restam <strong data-vagas>5</strong> vagas com acompanhamento</span>
+      </p>
+    </div>
+  </section>
+
+  <!-- ================================================================
        2 — BARRA VERMELHA (benefício)
        ============================================================= -->
   <section class="sec sec--redbar">
     <div class="inner">
       <div class="w redbar__text-w">
-        <div class="wc"><h2 class="heading redbar__text">Inclui 7 dias grátis de acesso a aulas AO VIVO | Acesso a mais de 100 aulas gravadas de workshops de NY Cookies, Sobremesas sem Açúcar, Bolos Crocantes e acompanhamento personalizado 24/7.</h2></div>
+        <div class="wc"><h2 class="heading redbar__text">Inclui 7 dias grátis de acesso a aulas AO VIVO | Acesso a mais de 100 aulas gravadas de workshops de Cookies Americanos, Sobremesas sem Açúcar, Bolos Crocantes e acompanhamento 24 horas por dia, 7 dias por semana, com uma equipe de <strong>28 pessoas treinadas</strong> para te orientar.</h2></div>
       </div>
     </div>
   </section>
@@ -142,6 +174,7 @@
             <div class="w offer__copy-w">
               <div class="wc">
                 <p class="offer__copy">COMPRE AGORA e receba <span data-bp="discount">90</span>% de desconto. De <del><span data-bp="priceOriginal">R$ 199,90</span></del>, tenha acesso HOJE por apenas <span data-bp="priceOffer">R$ 19,90</span>.</p>
+                <p class="offer__sobe" data-persuasao="precoSobe">Amanhã este valor sobe.</p>
               </div>
             </div>
 
@@ -237,6 +270,118 @@
   </section>
 
   <!-- ================================================================
+       5.5 — COMO VOCÊ VAI CONSEGUIR (índice do livro)
+       ============================================================= -->
+  <section class="sec sec--indice">
+    <div class="inner">
+      <div class="w indice__titulo-w">
+        <div class="wc"><h2 class="heading indice__titulo">COMO VOCÊ VAI CONSEGUIR?</h2></div>
+      </div>
+      <div class="w indice__sub-w">
+        <div class="wc"><h2 class="heading indice__sub">ButtercreamPro é o livro de receitas mais completo do mercado. Com mais de 130 páginas, este livro vai transformar você em uma verdadeira mestre da confeitaria.</h2></div>
+      </div>
+
+      <div class="w indice__grade-w">
+        <div class="wc">
+          <div class="indice">
+
+            <article class="indice__card indice__card--cremes">
+              <h3 class="indice__card-titulo">CREMES</h3>
+              <ol class="indice__lista">
+                  <li>Buttercream americano</li>
+                  <li>Buttercream suíço secreto</li>
+                  <li>Buttercream vegano</li>
+                  <li>Ermine buttercream</li>
+                  <li>Buttercream russo</li>
+                  <li>Buttercream misto (resistente ao calor)</li>
+                  <li>Buttercream de chocolate branco</li>
+                  <li>Buttercream de chocolate preto</li>
+                  <li>Buttercream de cream cheese</li>
+                  <li>Buttercream de manteiga tostada</li>
+                  <li>Buttercream de Nutella</li>
+                  <li>Buttercream de Oreo</li>
+                  <li>Buttercream de Biscoff</li>
+                  <li>Buttercream de café</li>
+                  <li>Buttercream de morango</li>
+                  <li>Buttercream de limão</li>
+                  <li>Buttercream de maracujá</li>
+                  <li>Buttercream de framboesa</li>
+                  <li>Buttercream de mirtilo</li>
+                  <li>Frosting de cream cheese</li>
+                  <li>Butterganache mágico 2.0</li>
+                  <li>Butterganache mágico 2.0 preto</li>
+                  <li>Butterganache mágico clássico</li>
+              </ol>
+            </article>
+
+            <div class="indice__coluna">
+              <article class="indice__card indice__card--massas">
+                <h3 class="indice__card-titulo">MASSAS</h3>
+                <ol class="indice__lista">
+                  <li>Bolo de chocolate Pro</li>
+                  <li>Bolo de cenoura</li>
+                  <li>Birthday cake</li>
+                  <li>Bolo red velvet</li>
+                  <li>Pão de ló de baunilha Pro</li>
+                  <li>Bolo clássico de baunilha Pro</li>
+                  <li>Bolo de avelã</li>
+                  <li>Bolo de limão Pro</li>
+                  <li>Bolo de chocolate e laranja</li>
+                  <li>Bolo de limão e mirtilos</li>
+                </ol>
+              </article>
+              <article class="indice__card indice__card--recheios">
+                <h3 class="indice__card-titulo">RECHEIOS</h3>
+                <ol class="indice__lista">
+                  <li>Recheio de framboesa</li>
+                  <li>Recheio de morango</li>
+                  <li>Curd de limão</li>
+                  <li>Curd de maracujá</li>
+                  <li>Creme de Nutella</li>
+                  <li>Creme de doce de leite</li>
+                  <li>Ganache de ChocoRocher</li>
+                  <li>Ganache de caramelo</li>
+                  <li>Ganache de morango</li>
+                  <li>Recheio de Kinder Bueno</li>
+                  <li>Namelaka de chocolate</li>
+                  <li>Namelaka de pistache</li>
+                  <li>Mousse de chocolate</li>
+                  <li>Mousse de maracujá</li>
+                  <li>Ganache de Oreo</li>
+                  <li>Ganache de framboesa</li>
+                  <li>Ganache de Nutella</li>
+                </ol>
+              </article>
+            </div>
+
+            <div class="indice__coluna">
+              <article class="indice__card indice__card--ganache">
+                <h3 class="indice__card-titulo">GANACHE <span>(para cobertura)</span></h3>
+                <ol class="indice__lista">
+                  <li>Ganache mágico de chocolate branco</li>
+                  <li>Ganache mágico de chocolate preto</li>
+                </ol>
+              </article>
+              <article class="indice__card indice__card--dicas">
+                <h3 class="indice__card-titulo">DICAS &amp; TRUQUES</h3>
+                <ol class="indice__lista">
+                  <li>Tamanhos e porções</li>
+                  <li>Adapte seus bolos à sua cidade</li>
+                  <li>Recupere um buttercream talhado</li>
+                  <li>Mini dicas e truques de ouro para buttercream</li>
+                  <li>Butterganache: dicas e truques</li>
+                  <li>Ganache: dicas e truques</li>
+                </ol>
+              </article>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================================
        6 — PRODUTO PRINCIPAL + BÔNUS (5 blocos imagem/texto)
        ============================================================= -->
   <section class="sec sec--product sec--product-first">
@@ -269,7 +414,7 @@
           <div class="wc"><h2 class="heading product__title">Livro de Receitas Virais Pro - Avaliado em <s><span data-bp="bonusReceitasVirais">R$ 27,99</span></s> /HOJE GRÁTIS</h2></div>
         </div>
         <div class="w product__text-w">
-          <div class="wc"><h2 class="heading product__text">O único livro de receitas que mantém você atualizada sobre as tendências da confeitaria. Com Receitas Virais Pro, torne-se mais competitiva e diferencie-se de 99,99% das confeiteiras que estão por aí.</h2></div>
+          <div class="wc"><h2 class="heading product__text">O único livro de receitas que mantém você atualizada sobre as tendências da confeitaria. Com Receitas Virais Pro, torne-se mais competitiva e diferencie-se de 99,99% das confeiteiras que estão por aí. <strong>E toda quarta-feira nossa equipe libera as receitas virais do momento, passo a passo</strong> — para você acompanhar o mercado assim que algo novo aparece.</h2></div>
         </div>
       </div>
     </div>
@@ -279,15 +424,15 @@
     <div class="inner">
       <div class="col product__media">
         <div class="w w--image product__img-w">
-          <div class="wc"><img src="assets/img/livro-ny-cookies.webp" width="1200" height="675" loading="lazy" decoding="async" alt="Mini Livro NY Cookies"></div>
+          <div class="wc"><img src="assets/img/livro-ny-cookies.webp" width="1200" height="675" loading="lazy" decoding="async" alt="Mini Livro de Cookies Americanos"></div>
         </div>
       </div>
       <div class="col product__body">
         <div class="w product__title-w">
-          <div class="wc"><h2 class="heading product__title">Mini Livro NY Cookies - Avaliado em <s><span data-bp="bonusNyCookies">R$ 12,99</span><br></s> /HOJE GRÁTIS</h2></div>
+          <div class="wc"><h2 class="heading product__title">Mini Livro de Cookies Americanos - Avaliado em <s><span data-bp="bonusNyCookies">R$ 12,99</span><br></s> /HOJE GRÁTIS</h2></div>
         </div>
         <div class="w product__text-w">
-          <div class="wc"><h2 class="heading product__text">Aprenda meu Método NY Cookies Pro de 5 passos para conseguir cookies perfeitos, altos, macios e super cremosos por dentro. Prepare um dos produtos mais virais do momento como uma profissional.</h2></div>
+          <div class="wc"><h2 class="heading product__text">Aprenda meu Método Cookies Americanos Pro de 5 passos para conseguir cookies perfeitos, altos, macios e super cremosos por dentro. Prepare um dos produtos mais virais do momento como uma profissional.</h2></div>
         </div>
       </div>
     </div>
@@ -330,12 +475,51 @@
   </section>
 
   <!-- ================================================================
+       6.5 — POR QUE ISSO FUNCIONA (garantia, lógica, simplicidade)
+       ============================================================= -->
+  <section class="sec sec--logica">
+    <div class="inner">
+      <div class="w logica__titulo-w">
+        <div class="wc"><h2 class="heading logica__titulo">Três passos. Sem mistério.</h2></div>
+      </div>
+
+      <div class="w logica__grade-w">
+        <div class="wc">
+          <div class="logica">
+            <div class="logica__passo">
+              <span class="logica__num">1</span>
+              <p class="logica__txt">Escolha a receita. Cada uma vem com medidas exatas e foto de cada etapa.</p>
+            </div>
+            <div class="logica__passo">
+              <span class="logica__num">2</span>
+              <p class="logica__txt">Siga o passo a passo. Se travar, a equipe responde — 24 horas por dia, 7 dias por semana.</p>
+            </div>
+            <div class="logica__passo">
+              <span class="logica__num">3</span>
+              <p class="logica__txt">Entregue. Se o bolo aguentar o calor da sua cidade, você já cobriu o investimento na primeira encomenda.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="w garantia-w">
+        <div class="wc">
+          <div class="garantia">
+            <p class="garantia__selo"><strong><span data-garantia-dias>7</span> dias de garantia</strong></p>
+            <p class="garantia__txt">Entre, leia as <span data-bp="paginas">130</span> páginas, teste as receitas. Se não for para você, peça o reembolso dentro de <span data-garantia-dias>7</span> dias e devolvemos tudo — sem formulário, sem pergunta, sem constrangimento. O risco é nosso, não seu.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================================
        7 — BARRA VERMELHA (2ª ocorrência)
        ============================================================= -->
   <section class="sec sec--redbar sec--redbar-2">
     <div class="inner">
       <div class="w redbar__text-w">
-        <div class="wc"><h2 class="heading redbar__text">Inclui 7 dias grátis de acesso a aulas AO VIVO | Acesso a mais de 100 aulas gravadas de workshops de NY Cookies, Sobremesas sem Açúcar, Bolos Crocantes e acompanhamento personalizado 24/7.</h2></div>
+        <div class="wc"><h2 class="heading redbar__text">Inclui 7 dias grátis de acesso a aulas AO VIVO | Acesso a mais de 100 aulas gravadas de workshops de Cookies Americanos, Sobremesas sem Açúcar, Bolos Crocantes e acompanhamento 24 horas por dia, 7 dias por semana, com uma equipe de <strong>28 pessoas treinadas</strong> para te orientar.</h2></div>
       </div>
     </div>
   </section>
@@ -356,6 +540,7 @@
             <div class="w offer__copy-w">
               <div class="wc">
                 <p class="offer__copy">COMPRE AGORA e receba <span data-bp="discount">90</span>% de desconto. De <del><span data-bp="priceOriginal">R$ 199,90</span></del>, tenha acesso HOJE por apenas <span data-bp="priceOffer">R$ 19,90</span>.</p>
+                <p class="offer__sobe" data-persuasao="precoSobe">Amanhã este valor sobe.</p>
               </div>
             </div>
 
@@ -391,6 +576,32 @@
             </div>
           </div>
 
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================================
+       8.5 — ANTES E DEPOIS DAS ALUNAS
+       Os 5 espaços abaixo estão reservados. Para publicar, troque cada
+       <div class="ad__vaga"> por:
+         <img src="assets/img/antes-depois-1.webp" alt="Antes e depois de ..." loading="lazy" width="600" height="600">
+       mantendo a proporção quadrada.
+       ============================================================= -->
+  <section class="sec sec--antesdepois">
+    <div class="inner">
+      <div class="w ad__titulo-w">
+        <div class="wc"><h2 class="heading ad__titulo">O antes e o depois de quem já aplicou</h2></div>
+      </div>
+      <div class="w ad__grade-w">
+        <div class="wc">
+          <div class="ad">
+            <figure class="ad__item"><div class="ad__vaga">Foto 1</div></figure>
+            <figure class="ad__item"><div class="ad__vaga">Foto 2</div></figure>
+            <figure class="ad__item"><div class="ad__vaga">Foto 3</div></figure>
+            <figure class="ad__item"><div class="ad__vaga">Foto 4</div></figure>
+            <figure class="ad__item"><div class="ad__vaga">Foto 5</div></figure>
+          </div>
         </div>
       </div>
     </div>
@@ -434,7 +645,7 @@
   <section class="sec sec--redbar sec--redbar-3">
     <div class="inner">
       <div class="w redbar3__text-w">
-        <div class="wc"><h2 class="heading redbar3__text">Inclui 7 dias grátis de acesso a aulas AO VIVO | Acesso a mais de 100 aulas gravadas de workshops de NY Cookies, Sobremesas sem Açúcar, Bolos Crocantes e acompanhamento personalizado 24/7.</h2></div>
+        <div class="wc"><h2 class="heading redbar3__text">Inclui 7 dias grátis de acesso a aulas AO VIVO | Acesso a mais de 100 aulas gravadas de workshops de Cookies Americanos, Sobremesas sem Açúcar, Bolos Crocantes e acompanhamento 24 horas por dia, 7 dias por semana, com uma equipe de <strong>28 pessoas treinadas</strong> para te orientar.</h2></div>
       </div>
     </div>
   </section>
@@ -491,6 +702,24 @@
           </div>
         </div>
 
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================================
+       11.5 — O PORQUÊ DA MARCA
+       ============================================================= -->
+  <section class="sec sec--porque">
+    <div class="inner">
+      <div class="w porque__w">
+        <div class="wc">
+          <h2 class="heading porque__titulo">Por que este livro existe</h2>
+          <p class="porque__txt">A confeitaria da mãe da Karen quase fechou as portas.</p>
+          <p class="porque__txt">Não era falta de talento. Era bolo que desandava no calor, recheio que vazava, cobertura que derretia antes de chegar na festa. Cliente que não voltava. Conta que não fechava no fim do mês.</p>
+          <p class="porque__txt">A Karen se enfiou nas cozinhas das melhores confeitarias do mundo atrás de uma coisa só: entender o que ninguém estava contando. Aprendeu a técnica, trouxe pra casa, e o negócio da mãe virou.</p>
+          <p class="porque__txt porque__txt--destaque">Foi aí que ela percebeu: se aquele conhecimento tivesse chegado antes, a família não teria passado por aquilo. E tem milhares de confeiteiras passando pelo mesmo agora.</p>
+          <p class="porque__txt">É por isso que o ButtercreamPro existe. Não para guardar segredo de cozinha profissional — para acabar com ele.</p>
+        </div>
       </div>
     </div>
   </section>
