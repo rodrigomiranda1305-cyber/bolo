@@ -55,9 +55,6 @@ window.BP_CONFIG = {
     /* Aviso de que o preço sobe. Só mantenha ligado se realmente for subir. */
     avisoPrecoSobe: true,
 
-    /* Tamanho da equipe de suporte citado nas barras vermelhas. */
-    tamanhoEquipe: 28,
-
     /* Prazo de garantia legal (CDC art. 49 / Hotmart). */
     diasGarantia: 7
   },
