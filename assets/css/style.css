@@ -429,7 +429,7 @@ a { color: inherit; box-shadow: none; text-decoration: none; }
 .author__row { flex-direction: row; gap: 0; }
 
 .author__text  { width: 50%; margin-left: 30px; }
-.author__media { width: 34.879%; margin-left: 43px; flex-grow: 0; flex-shrink: 0; }
+.author__media { width: 46%; margin-left: 30px; flex-grow: 0; flex-shrink: 0; }
 
 .author__kicker-w { text-align: center; }
 .author__kicker-w .wc { margin: 34px 0 0; }
@@ -443,7 +443,30 @@ a { color: inherit; box-shadow: none; text-decoration: none; }
 .author__bio-w .wc { margin: 3px 0 0; }
 .author__bio { font-size: 21px; font-weight: 500; color: #1a277f; }
 
-.author__img-w { flex-grow: 0; flex-shrink: 0; width: 99.632%; max-width: 99.632%; }
+/* Duas fotos lado a lado: a Karen e a fachada da confeitaria. */
+.author__fotos { display: flex; gap: 14px; align-items: flex-start; }
+.author__foto { flex: 1 1 0; min-width: 0; margin: 0; }
+.author__foto img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 5;        /* reserva o espaço: nada pula ao carregar */
+  object-fit: cover;
+  border-radius: 14px;
+  box-shadow: 0 8px 22px rgb(26 39 127 / .14);
+}
+/* mesma proporcao nas duas, para as legendas ficarem na mesma linha.
+   A fachada e quadrada: o object-fit recorta as laterais, mantendo a
+   placa e a vitrine no centro. */
+.author__foto--loja img { object-position: 50% 45%; }
+.author__foto figcaption {
+  margin-top: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.25;
+  color: #5a6b86;
+  text-align: center;
+}
 
 /* =====================================================================
    CABEÇALHO E RODAPÉ
@@ -809,7 +832,8 @@ a { color: inherit; box-shadow: none; text-decoration: none; }
   .author__bio-w .wc { margin: -2px 0 0; }
   .author__bio { font-size: 16px; }
 
-  .author__img-w .wc { margin: 19px 0 0; }
+  .author__fotos-w .wc { margin: 19px 0 0; }
+  .author__foto figcaption { font-size: 13px; }
 }
 
 /* =====================================================================
@@ -986,9 +1010,9 @@ a { color: inherit; box-shadow: none; text-decoration: none; }
   .author__kicker, .author__name { font-size: 30px; }
   .author__bio { font-size: 18px; }
 
-  .author__media { width: 331px; margin: 0; }
-  .author__img-w { width: 295px; max-width: 295px; text-align: start; }
-  .author__img-w .wc { margin: 0 -20px 0 20px; }
+  .author__media { width: 100%; margin: 0; }
+  .author__fotos { gap: 10px; }
+  .author__foto figcaption { font-size: 12px; margin-top: 6px; }
 
   /* Botões de compra recebem a mesma animação do original no mobile. */
   .offer__cta-w .btn-wrap.is-visible,
