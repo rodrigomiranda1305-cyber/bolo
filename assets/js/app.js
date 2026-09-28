@@ -251,8 +251,21 @@
   };
 
   Carousel.prototype.go = function (delta) {
+    if (this.animando) return;          /* ignora cliques durante a animação */
+    var self = this;
+    this.animando = true;
     this.index += delta;
     this.move(true);
+
+    /* O retorno ao primeiro slide NÃO pode depender de `transitionend`:
+       quem usa "reduzir movimento" no celular não tem transição, o evento
+       nunca dispara e o carrossel seguia para fora da pista, ficando em
+       branco. Um temporizador resolve em qualquer cenário. */
+    clearTimeout(this.tNormaliza);
+    this.tNormaliza = setTimeout(function () {
+      self.normalize();
+      self.animando = false;
+    }, SPEED + 60);
   };
 
   Carousel.prototype.normalize = function () {
@@ -263,12 +276,12 @@
   Carousel.prototype.bind = function () {
     var self = this;
 
-    this.track.addEventListener('transitionend', function () { self.normalize(); });
-
     var prev = this.root.querySelector('.carousel__btn--prev');
     var next = this.root.querySelector('.carousel__btn--next');
-    if (prev) prev.addEventListener('click', function () { self.stop(); self.go(-1); });
-    if (next) next.addEventListener('click', function () { self.stop(); self.go(1); });
+    /* As setas apenas reiniciam a contagem — o giro automático continua,
+       para o carrossel nunca parar em um slide. */
+    if (prev) prev.addEventListener('click', function () { self.go(-1); self.reiniciar(); });
+    if (next) next.addEventListener('click', function () { self.go(1); self.reiniciar(); });
 
     /* Pausa ao passar o mouse, como no original. */
     this.root.addEventListener('mouseenter', function () { self.paused = true; });
@@ -296,9 +309,14 @@
     }, this.autoplayMs);
   };
 
-  /* Interação do usuário encerra o avanço automático, igual ao original. */
   Carousel.prototype.stop = function () {
     if (this.timer) { clearInterval(this.timer); this.timer = null; }
+  };
+
+  /* Zera a contagem do giro automático depois de um clique nas setas. */
+  Carousel.prototype.reiniciar = function () {
+    this.stop();
+    this.start();
   };
 
   /* =================================================================
