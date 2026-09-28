@@ -709,13 +709,20 @@ a { color: inherit; box-shadow: none; text-decoration: none; }
 .garantia__selo {
   flex: 0 0 auto;
   margin: 0;
-  font-size: 21px;
+  padding: 10px 18px;
+  border-radius: 999px;
+  background: #1ba32e;
+  color: #fff;
+  font-size: 19px;
   line-height: 1.15;
-  color: #147a24;
   text-align: center;
+  white-space: nowrap;
 }
 .garantia__txt {
-  flex: 1 1 260px;
+  /* a base é `auto`: com 260px fixos, ao empilhar no celular esse valor
+     vira ALTURA mínima e sobra um vazio enorme dentro da caixa verde */
+  flex: 1 1 auto;
+  min-width: 240px;
   margin: 0;
   font-size: 16px;
   font-weight: 500;
@@ -846,31 +853,35 @@ a { color: inherit; box-shadow: none; text-decoration: none; }
   .redbar3__text-w { width: 270px; max-width: 270px; align-self: center; text-align: center; }
   .redbar3__text { font-size: 15px; }
 
-  /* ------------------------------------------------------- ofertas */
-  .offer__left { margin: 0; }
+  /* ------------------------------------------------------- ofertas
+     No mobile o bloco todo fica centralizado e empilhado com respiro.
+     As margens negativas do layout original foram removidas aqui: elas
+     colavam o botão no texto de cima e no "Hoje 90% de desconto". */
+  .offer__left { margin: 0; text-align: center; }
 
-  .offer__kicker-w .wc { margin: 10px 0 -3px; padding: 0; }
+  .offer__kicker-w { text-align: center; }
+  .offer__kicker-w .wc { margin: 14px 0 0; padding: 0; }
   .offer__kicker { font-size: 26px; }
 
-  .offer__copy-w .wc { margin: 0 18px -50px; }
-  .offer__copy-w { text-align: start; }
-  /* O respiro de 52px que ficava depois do parágrafo passou para depois do
-     aviso de preço. Sem isso, a margem negativa do bloco faz o botão subir
-     por cima da linha "Amanhã este valor sobe". */
-  .offer__copy { font-size: 24px; line-height: 1em; letter-spacing: 0; word-spacing: 0; margin-block-end: 6px; }
-  .offer__sobe { margin: 0 0 52px; font-size: 14px; }
+  .offer__copy-w { text-align: center; }
+  .offer__copy-w .wc { margin: 0 18px; }
+  .offer__copy { font-size: 22px; line-height: 1.25; letter-spacing: 0; word-spacing: 0; margin-block-end: 0; }
+  .offer__sobe { margin: 12px 0 0; font-size: 14px; }
 
-  .offer__cta-w .wc { margin: 0; padding: 0; }
+  .offer__cta-w { text-align: center; }
+  .offer__cta-w .wc { margin: 22px 0 0; padding: 0; }
 
-  .offer__right { width: 339px; margin: -22px 0 0 8px; align-self: center; }
-  .offer__right--2 { width: 339px; margin: -22px -14px 0 15px; }
+  /* separa o botão do "Hoje 90% de desconto!" */
+  .offer__right,
+  .offer__right--2 { width: 100%; margin: 34px 0 0; align-self: center; }
 
-  .offer__discount-w .wc { margin: 0 -14px 0 0; }
+  .offer__discount-w { text-align: center; }
+  .offer__discount-w .wc,
   .offer__right--2 .offer__discount-w .wc { margin: 0; }
 
   .offer__timer-w { align-self: center; }
-  .offer__timer-w .wc { margin: 0 -8px 7px 0; padding: 0; }
-  .offer__timer-w--2 .wc { margin: 0 0 7px; padding: 0; }
+  .offer__timer-w .wc,
+  .offer__timer-w--2 .wc { margin: 14px 0 7px; padding: 0; }
   .countdown { max-width: 67%; }
   .countdown__digits { font-size: 38px; }
   .countdown__label  { font-size: 12px; }
@@ -916,8 +927,14 @@ a { color: inherit; box-shadow: none; text-decoration: none; }
   .final__value { font-size: 17px; line-height: 1.3em; }
 
   .final__price { font-size: 32px; }
-  .final__cta-w .wc { margin: 0; padding: 0; }
-  .final__timerlabel { font-size: 32px; }
+
+  /* mesmo tratamento dos outros blocos de oferta: centralizado e com
+     respiro entre o botão e o aviso do contador */
+  .final__col,
+  .final__cta-w { text-align: center; }
+  .final__cta-w .wc { margin: 22px 0 0; padding: 0; }
+  .final__timerlabel-w { margin-top: 26px; }
+  .final__timerlabel { font-size: 30px; }
 
   .final__timer-w { width: 756px; max-width: 756px; }
   .final__timer-w .wc { margin: 0 0 7px; padding: 0; }
@@ -946,8 +963,15 @@ a { color: inherit; box-shadow: none; text-decoration: none; }
 
   .logica__titulo { font-size: 26px; }
   .logica { flex-direction: column; gap: 12px; }
-  .garantia { flex-direction: column; text-align: center; padding: 20px; }
-  .garantia__txt { font-size: 15px; }
+  .garantia {
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    padding: 22px 20px;
+    text-align: center;
+  }
+  .garantia__selo { font-size: 17px; padding: 9px 16px; }
+  .garantia__txt { min-width: 0; font-size: 15px; }
 
   .ad__titulo { font-size: 26px; }
   .ad { flex-wrap: wrap; }

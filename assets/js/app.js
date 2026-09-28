@@ -194,33 +194,10 @@
 
   function initCarousels() {
     var nodes = document.querySelectorAll('[data-carousel]');
-    for (var i = 0; i < nodes.length; i++) {
-      var carousel = new Carousel(nodes[i]);
-      lazyLoadSlides(carousel);
-    }
-  }
-
-  /**
-   * As imagens dos slides só são baixadas quando o carrossel se aproxima da
-   * viewport — são arquivos grandes e todos ficam abaixo da dobra.
-   */
-  function lazyLoadSlides(carousel) {
-    function load() { carousel.carregarImagens(); }
-
-    if ('IntersectionObserver' in window) {
-      var io = new IntersectionObserver(function (entries) {
-        if (!entries[0].isIntersecting) return;
-        io.disconnect();
-        load();
-      }, { rootMargin: '1000px 0px' });
-      io.observe(carousel.root);
-    }
-
-    /* Três gatilhos independentes para o mesmo carregamento idempotente: se
-       o observador não disparar (acontece em navegadores móveis), o primeiro
-       rolar ou o prazo máximo garantem as imagens. */
-    window.addEventListener('scroll', load, { once: true, passive: true });
-    setTimeout(load, 3500);
+    /* Os fundos vêm no HTML: chegam junto com a página e os clones do laço
+       os herdam automaticamente. Sem carregamento preguiçoso, sem seção em
+       branco. */
+    for (var i = 0; i < nodes.length; i++) new Carousel(nodes[i]);
   }
 
   function Carousel(root) {
@@ -240,18 +217,6 @@
     this.bind();
   }
 
-  /** Aplica os fundos nos slides-molde (de onde saem os clones) e nos que já
-      estão na pista. Idempotente: pode rodar quantas vezes for preciso. */
-  Carousel.prototype.carregarImagens = function () {
-    this.imagensCarregadas = true;
-    var todos = this.originals.concat(Array.prototype.slice.call(this.track.children));
-    for (var i = 0; i < todos.length; i++) {
-      var img = todos[i].querySelector('.carousel__image[data-bg]');
-      if (!img) continue;
-      img.style.backgroundImage = 'url(' + img.getAttribute('data-bg') + ')';
-    }
-  };
-
   /** (Re)monta os clones do laço para o número de itens visíveis atual. */
   Carousel.prototype.build = function () {
     var pv = slidesPerView();
@@ -265,8 +230,6 @@
     for (i = 0; i < pv; i++) this.track.appendChild(this.originals[i].cloneNode(true));
 
     this.index = pv;
-    /* os clones nascem sem fundo: reaplica para as fotos não sumirem */
-    if (this.imagensCarregadas) this.carregarImagens();
     this.layout();
   };
 
