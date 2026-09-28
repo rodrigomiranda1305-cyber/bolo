@@ -736,19 +736,15 @@ a { color: inherit; box-shadow: none; text-decoration: none; }
 .ad__titulo { font-size: 34px; font-weight: 700; color: #294670; }
 
 .ad { display: flex; gap: 14px; }
-.ad__item { flex: 1 1 0; margin: 0; }
-.ad__item img { display: block; width: 100%; border-radius: 14px; }
-.ad__vaga {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  aspect-ratio: 1 / 1;
-  border: 2px dashed #c8cfdd;
+.ad__item { flex: 1 1 0; min-width: 0; margin: 0; }
+.ad__item img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 460 / 575;   /* reserva o espaço: nada "pula" ao carregar */
+  object-fit: cover;
   border-radius: 14px;
-  background: #f4f7fc;
-  color: #9aa6ba;
-  font-size: 14px;
-  font-weight: 600;
+  box-shadow: 0 6px 18px rgb(26 39 127 / .12);
 }
 
 /* ------------------------------------------ o porquê da marca */
@@ -974,8 +970,10 @@ a { color: inherit; box-shadow: none; text-decoration: none; }
   .garantia__txt { min-width: 0; font-size: 15px; }
 
   .ad__titulo { font-size: 26px; }
-  .ad { flex-wrap: wrap; }
-  .ad__item { flex: 1 1 45%; }
+  .ad { flex-wrap: wrap; gap: 12px; }
+  .ad__item { flex: 1 1 calc(50% - 6px); max-width: calc(50% - 6px); }
+  /* a quinta imagem fica sozinha na última linha, centralizada */
+  .ad__item:last-child { margin-inline: auto; }
 
   .porque__w { width: 100%; max-width: 100%; }
   .porque__titulo { font-size: 26px; }
