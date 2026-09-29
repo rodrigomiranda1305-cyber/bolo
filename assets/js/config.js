@@ -23,11 +23,11 @@ window.BP_CONFIG = {
 
   /* -------------------------------------------------------------- checkout */
   /* Um único destino para TODOS os CTAs de compra da página. */
-  checkoutUrl: 'https://pay.hotmart.com/U89314700I?off=zbtkndix&checkoutMode=10',
+  checkoutUrl: 'https://pay.kiwify.com.br/8SrFOe2',
 
   /* Repasse de UTMs feito por conta própria.
      DESLIGADO porque a UTMify já faz isso — e faz melhor, incluindo os
-     parâmetros xcod/sck que a Hotmart usa para atribuir a venda. Com os dois
+     parâmetros de atribuição que a plataforma de checkout usa. Com os dois
      ligados, um sobrescreveria o outro. Só religue se remover a UTMify. */
   forwardUtmParams: false,
 
@@ -55,7 +55,7 @@ window.BP_CONFIG = {
     /* Aviso de que o preço sobe. Só mantenha ligado se realmente for subir. */
     avisoPrecoSobe: true,
 
-    /* Prazo de garantia legal (CDC art. 49 / Hotmart). */
+    /* Prazo de garantia legal (CDC art. 49). */
     diasGarantia: 7
   },
 
