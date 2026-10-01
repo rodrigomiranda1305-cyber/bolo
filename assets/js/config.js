@@ -11,7 +11,7 @@ window.BP_CONFIG = {
   /* ---------------------------------------------------------------- oferta */
   currency: 'R$',
   originalPrice: '199,90',
-  offerPrice: '19,90',
+  offerPrice: '29,90',
   discountPercentage: 90,
 
   /* valores dos bônus exibidos como "Avaliado em X / HOJE GRÁTIS" */
