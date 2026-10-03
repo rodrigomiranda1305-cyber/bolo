@@ -23,7 +23,7 @@ window.BP_CONFIG = {
 
   /* -------------------------------------------------------------- checkout */
   /* Um único destino para TODOS os CTAs de compra da página. */
-  checkoutUrl: 'https://pay.kiwify.com.br/r0HijgY',
+  checkoutUrl: 'https://buttercreampro.pay.yampi.com.br/r/P2SKXHZSDA',
 
   /* Repasse de UTMs feito por conta própria.
      DESLIGADO porque a UTMify já faz isso — e faz melhor, incluindo os
