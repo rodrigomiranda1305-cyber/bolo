@@ -66,11 +66,12 @@ h1, h2, h3 {
 .indice__titulo,
 .logica__titulo,
 .porque__titulo,
-.ad__titulo,
-.final__title {
+.ad__titulo {
   color: var(--b-tinta);
   line-height: 1.15;
 }
+/* fundo escuro: so a entrelinha */
+.final__title { line-height: 1.15; }
 
 /* o "olho" acima dos blocos vira etiqueta dourada em caixa alta */
 .offer__kicker,
@@ -80,8 +81,10 @@ h1, h2, h3 {
   font-size: .78em;
   letter-spacing: .16em;
   text-transform: uppercase;
-  color: var(--b-ouro);
 }
+.author__kicker { color: var(--b-ouro); }
+/* sobre o azul escuro da oferta, o dourado precisa ser mais claro */
+.offer__kicker { color: #e8c87a; }
 
 /* ------------------------------------------------ blocos de produto */
 .product__title {
@@ -99,19 +102,19 @@ h1, h2, h3 {
 .sec--product:nth-of-type(even) { background-color: var(--b-fundo-alt); }
 
 /* ------------------------------------------------------- a oferta */
+/* .sec--offer e .sec--final tem fundo azul escuro (#16335b).
+   Nestes blocos eu troco SO a fonte — a cor continua a original (branca).
+   Pintar de azul-tinta aqui apaga o preco e a chamada da oferta. */
 .offer__discount {
-  color: var(--b-tinta);
   font-weight: 700;
   letter-spacing: -0.02em;
 }
 .offer__copy {
   font-family: "Inter", sans-serif;
-  color: var(--b-texto);
   letter-spacing: 0;
 }
 .final__price {
   font-family: "Playfair Display", Georgia, serif;
-  color: var(--b-tinta);
   letter-spacing: -0.02em;
 }
 
