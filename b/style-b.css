@@ -239,3 +239,54 @@ h1, h2, h3 {
   .aviso { transition: opacity .2s ease, visibility .2s; transform: none; }
   .aviso.is-visivel { transform: none; }
 }
+
+/* =============================== antes e depois por produto (3 fotos)
+   Faixa enxuta logo abaixo de cada material. As fotos tem proporcoes
+   diferentes entre si, entao uso `contain` dentro de um cartao de
+   altura fixa: nada e cortado e as tres ficam do mesmo tamanho.
+   `cover` cortaria justamente a tarja "Antes / Depois" do rodape. */
+.sec--admini > .inner { padding-block: 4px 30px; }
+.admini__col { width: 100%; }
+
+.admini__titulo {
+  margin: 0 0 14px;
+  font-family: "Inter", sans-serif;
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--b-ouro);
+  text-align: center;
+}
+
+.admini__grade {
+  display: flex;
+  gap: 14px;
+  justify-content: center;
+  align-items: stretch;
+}
+.admini__item {
+  flex: 1 1 0;
+  min-width: 0;
+  max-width: 300px;
+  margin: 0;
+  padding: 8px;
+  border: 1px solid var(--b-linha);
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 4px 16px rgb(21 32 92 / .06);
+}
+.admini__item img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  object-fit: contain;
+  border-radius: 8px;
+}
+
+@media (max-width: 767px) {
+  .sec--admini > .inner { padding-block: 2px 22px; }
+  .admini__grade { gap: 8px; }
+  .admini__item { padding: 5px; border-radius: 11px; }
+  .admini__titulo { font-size: 11px; letter-spacing: .1em; margin-bottom: 10px; }
+}
