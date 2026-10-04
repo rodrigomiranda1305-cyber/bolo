@@ -248,16 +248,9 @@ h1, h2, h3 {
 .sec--admini > .inner { padding-block: 4px 30px; }
 .admini__col { width: 100%; }
 
-.admini__titulo {
-  margin: 0 0 14px;
-  font-family: "Inter", sans-serif;
-  font-size: 12.5px;
-  font-weight: 600;
-  letter-spacing: .14em;
-  text-transform: uppercase;
-  color: var(--b-ouro);
-  text-align: center;
-}
+/* o titulo das faixas usa .ad__titulo, o mesmo da secao principal —
+   mesmo tamanho, mesma cor, mesma fonte. Aqui so o espaco embaixo. */
+.sec--admini .ad__titulo-w { margin-bottom: 16px; }
 
 .admini__grade {
   display: flex;
@@ -280,7 +273,7 @@ h1, h2, h3 {
   display: block;
   width: 100%;
   aspect-ratio: 4 / 5;
-  object-fit: contain;
+  object-fit: cover;      /* as 9 ja saem em 560x700, entao nada e cortado */
   border-radius: 8px;
 }
 
