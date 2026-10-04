@@ -65,11 +65,12 @@ h1, h2, h3 {
 .achieve__title,
 .indice__titulo,
 .logica__titulo,
-.porque__titulo,
 .ad__titulo {
   color: var(--b-tinta);
   line-height: 1.15;
 }
+/* .sec--porque tambem e azul escuro: aqui a cor original fica */
+.porque__titulo { line-height: 1.15; }
 /* fundo escuro: so a entrelinha */
 .final__title { line-height: 1.15; }
 
@@ -161,4 +162,80 @@ h1, h2, h3 {
 /* quem pediu menos movimento continua sem movimento */
 @media (prefers-reduced-motion: reduce) {
   .carousel__track { transition: none !important; }
+}
+
+
+/* ============================================ aviso de prova social
+   Canto inferior esquerdo. Discreto: nao cobre o botao de compra,
+   nao empurra conteudo, e some sozinho. */
+.aviso {
+  position: fixed;
+  left: 18px;
+  bottom: 18px;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  max-width: min(340px, calc(100vw - 36px));
+  padding: 12px 38px 12px 13px;
+  border: 1px solid var(--b-linha);
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 10px 30px rgb(21 32 92 / .16);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(14px);
+  transition: opacity .35s ease, transform .35s ease, visibility .35s;
+}
+.aviso.is-visivel { opacity: 1; visibility: visible; transform: translateY(0); }
+
+.aviso__ico {
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  background: #e8f6ec;
+  color: var(--b-verde, #02a219);
+  font-size: 15px;
+  font-weight: 700;
+}
+.aviso__txt {
+  margin: 0;
+  font-family: "Inter", sans-serif;
+  font-size: 13.5px;
+  line-height: 1.35;
+  letter-spacing: 0;
+  color: var(--b-texto);
+}
+.aviso__txt strong {
+  display: block;
+  font-weight: 600;
+  color: var(--b-tinta);
+}
+.aviso__txt span { color: #8a8a94; font-size: 12.5px; }
+
+.aviso__fechar {
+  position: absolute;
+  top: 6px; right: 8px;
+  padding: 2px 5px;
+  border: 0;
+  background: none;
+  color: #b9b9c2;
+  font-size: 17px;
+  line-height: 1;
+  cursor: pointer;
+}
+.aviso__fechar:hover { color: var(--b-texto); }
+
+@media (max-width: 600px) {
+  .aviso { left: 12px; bottom: 12px; padding: 10px 34px 10px 11px; }
+  .aviso__txt { font-size: 12.5px; }
+  .aviso__ico { width: 26px; height: 26px; font-size: 13px; }
+}
+
+/* quem pediu menos movimento recebe o aviso sem deslizar */
+@media (prefers-reduced-motion: reduce) {
+  .aviso { transition: opacity .2s ease, visibility .2s; transform: none; }
+  .aviso.is-visivel { transform: none; }
 }
