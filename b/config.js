@@ -14,8 +14,8 @@ window.BP_CONFIG = {
   /* ---------------------------------------------------------------- oferta */
   currency: 'R$',
   originalPrice: '199,90',
-  offerPrice: '49,90',
-  discountPercentage: 75,
+  offerPrice: '19,90',
+  discountPercentage: 90,
 
   /* valores dos bônus exibidos como "Avaliado em X / HOJE GRÁTIS" */
   bonusPrices: {
@@ -26,7 +26,7 @@ window.BP_CONFIG = {
 
   /* -------------------------------------------------------------- checkout */
   /* Um único destino para TODOS os CTAs de compra da página. */
-  checkoutUrl: 'https://buttercreampro.pay.yampi.com.br/r/P2SKXHZSDA',
+  checkoutUrl: 'https://buttercreampro.pay.yampi.com.br/r/MUZPSBOTKS',
 
   /* Repasse de UTMs feito por conta própria.
      DESLIGADO porque a UTMify já faz isso — e faz melhor, incluindo os
