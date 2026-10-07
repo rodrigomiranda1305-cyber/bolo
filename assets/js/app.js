@@ -23,6 +23,17 @@
     bonusMiniCheesecakes: money((CFG.bonusPrices || {}).miniCheesecakes)
   };
 
+  /* Qualquer bônus novo em config.bonusPrices vira um data-bp sozinho:
+     `miniDonuts` -> data-bp="bonusMiniDonuts". Evita ter que mexer aqui
+     toda vez que um bônus entra na página. */
+  (function () {
+    var b = CFG.bonusPrices || {};
+    for (var k in b) {
+      if (!Object.prototype.hasOwnProperty.call(b, k)) continue;
+      VALUES['bonus' + k.charAt(0).toUpperCase() + k.slice(1)] = money(b[k]);
+    }
+  })();
+
   function applyValues() {
     var nodes = document.querySelectorAll('[data-bp]');
     for (var i = 0; i < nodes.length; i++) {

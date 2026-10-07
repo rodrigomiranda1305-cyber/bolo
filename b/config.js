@@ -21,7 +21,10 @@ window.BP_CONFIG = {
   bonusPrices: {
     receitasVirais: '27,99',
     nyCookies: '12,99',
-    miniCheesecakes: '12,99'
+    miniCheesecakes: '12,99',
+    miniDonuts: '12,99',
+    bolosCaseiros: '17,99',
+    mousses: '12,99'
   },
 
   /* -------------------------------------------------------------- checkout */
