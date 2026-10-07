@@ -41,7 +41,7 @@ window.BP_CONFIG = {
   persuasao: {
     /* Card de abertura: a visitante confirma que se identifica com o
        problema antes de ver a oferta. Aparece uma vez por sessão. */
-    cardAbertura: true,
+    cardAbertura: false,
 
     /* Data de hoje na barra de urgência, atualizada sozinha. */
     mostrarDataDeHoje: true,
