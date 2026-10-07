@@ -166,62 +166,87 @@ h1, h2, h3 {
 
 
 /* ============================================ aviso de prova social
-   Canto inferior esquerdo. Discreto: nao cobre o botao de compra,
-   nao empurra conteudo, e some sozinho. */
+   Canto inferior esquerdo. Miniatura do produto, selo de confirmacao e
+   cidade. Nao cobre o botao de compra e some sozinho. */
 .aviso {
   position: fixed;
-  left: 18px;
-  bottom: 18px;
+  left: 20px;
+  bottom: 20px;
   z-index: 60;
   display: flex;
   align-items: center;
-  gap: 11px;
-  max-width: min(340px, calc(100vw - 36px));
-  padding: 12px 38px 12px 13px;
-  border: 1px solid var(--b-linha);
-  border-radius: 14px;
+  gap: 13px;
+  max-width: min(362px, calc(100vw - 40px));
+  padding: 13px 40px 13px 13px;
+  border: 1px solid rgb(21 32 92 / .09);
+  border-radius: 16px;
   background: #fff;
-  box-shadow: 0 10px 30px rgb(21 32 92 / .16);
+  box-shadow: 0 2px 6px rgb(21 32 92 / .06), 0 14px 38px rgb(21 32 92 / .16);
   opacity: 0;
   visibility: hidden;
-  transform: translateY(14px);
-  transition: opacity .35s ease, transform .35s ease, visibility .35s;
+  transform: translateY(16px) scale(.97);
+  transition: opacity .4s cubic-bezier(.2,.8,.2,1),
+              transform .4s cubic-bezier(.2,.8,.2,1), visibility .4s;
 }
-.aviso.is-visivel { opacity: 1; visibility: visible; transform: translateY(0); }
+.aviso.is-visivel { opacity: 1; visibility: visible; transform: translateY(0) scale(1); }
 
-.aviso__ico {
+.aviso__capa {
   flex: 0 0 auto;
-  display: grid;
-  place-items: center;
-  width: 30px; height: 30px;
-  border-radius: 50%;
-  background: #e8f6ec;
-  color: var(--b-verde, #02a219);
-  font-size: 15px;
-  font-weight: 700;
+  width: 46px; height: 46px;
+  object-fit: cover;
+  border-radius: 10px;
+  background: var(--b-fundo-alt);
 }
-.aviso__txt {
-  margin: 0;
+.aviso__corpo { min-width: 0; }
+
+.aviso__top {
+  display: flex;
+  align-items: center;
+  gap: 5px;
   font-family: "Inter", sans-serif;
-  font-size: 13.5px;
-  line-height: 1.35;
-  letter-spacing: 0;
-  color: var(--b-texto);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--b-verde, #02a219);
 }
-.aviso__txt strong {
+.aviso__pulso {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: #02a219;
+  box-shadow: 0 0 0 0 rgb(2 162 25 / .55);
+  animation: avisoPulso 2s infinite;
+}
+@keyframes avisoPulso {
+  70%  { box-shadow: 0 0 0 7px rgb(2 162 25 / 0); }
+  100% { box-shadow: 0 0 0 0 rgb(2 162 25 / 0); }
+}
+
+.aviso__nome {
   display: block;
+  margin-top: 3px;
+  font-family: "Inter", sans-serif;
+  font-size: 14px;
   font-weight: 600;
+  line-height: 1.25;
   color: var(--b-tinta);
 }
-.aviso__txt span { color: #8a8a94; font-size: 12.5px; }
+.aviso__onde {
+  display: block;
+  margin-top: 1px;
+  font-family: "Inter", sans-serif;
+  font-size: 12.5px;
+  line-height: 1.3;
+  color: #8a8a94;
+}
 
 .aviso__fechar {
   position: absolute;
-  top: 6px; right: 8px;
+  top: 7px; right: 9px;
   padding: 2px 5px;
   border: 0;
   background: none;
-  color: #b9b9c2;
+  color: #c4c4cd;
   font-size: 17px;
   line-height: 1;
   cursor: pointer;
@@ -229,59 +254,16 @@ h1, h2, h3 {
 .aviso__fechar:hover { color: var(--b-texto); }
 
 @media (max-width: 600px) {
-  .aviso { left: 12px; bottom: 12px; padding: 10px 34px 10px 11px; }
-  .aviso__txt { font-size: 12.5px; }
-  .aviso__ico { width: 26px; height: 26px; font-size: 13px; }
+  .aviso { left: 12px; bottom: 12px; gap: 11px; padding: 11px 34px 11px 11px; border-radius: 14px; }
+  .aviso__capa { width: 40px; height: 40px; border-radius: 9px; }
+  .aviso__nome { font-size: 13px; }
+  .aviso__onde { font-size: 11.5px; }
 }
 
-/* quem pediu menos movimento recebe o aviso sem deslizar */
 @media (prefers-reduced-motion: reduce) {
   .aviso { transition: opacity .2s ease, visibility .2s; transform: none; }
   .aviso.is-visivel { transform: none; }
-}
-
-/* =============================== antes e depois por produto (3 fotos)
-   Faixa enxuta logo abaixo de cada material. As fotos tem proporcoes
-   diferentes entre si, entao uso `contain` dentro de um cartao de
-   altura fixa: nada e cortado e as tres ficam do mesmo tamanho.
-   `cover` cortaria justamente a tarja "Antes / Depois" do rodape. */
-.sec--admini > .inner { padding-block: 4px 30px; }
-.admini__col { width: 100%; }
-
-/* o titulo das faixas usa .ad__titulo, o mesmo da secao principal —
-   mesmo tamanho, mesma cor, mesma fonte. Aqui so o espaco embaixo. */
-.sec--admini .ad__titulo-w { margin-bottom: 16px; }
-
-.admini__grade {
-  display: flex;
-  gap: 14px;
-  justify-content: center;
-  align-items: stretch;
-}
-.admini__item {
-  flex: 1 1 0;
-  min-width: 0;
-  max-width: 300px;
-  margin: 0;
-  padding: 8px;
-  border: 1px solid var(--b-linha);
-  border-radius: 14px;
-  background: #fff;
-  box-shadow: 0 4px 16px rgb(21 32 92 / .06);
-}
-.admini__item img {
-  display: block;
-  width: 100%;
-  aspect-ratio: 4 / 5;
-  object-fit: cover;      /* as 9 ja saem em 560x700, entao nada e cortado */
-  border-radius: 8px;
-}
-
-@media (max-width: 767px) {
-  .sec--admini > .inner { padding-block: 2px 22px; }
-  .admini__grade { gap: 8px; }
-  .admini__item { padding: 5px; border-radius: 11px; }
-  .admini__titulo { font-size: 11px; letter-spacing: .1em; margin-bottom: 10px; }
+  .aviso__pulso { animation: none; }
 }
 
 /* ===================================== aviso de que o preco volta a subir

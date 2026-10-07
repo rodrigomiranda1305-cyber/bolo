@@ -67,13 +67,17 @@
     caixa.setAttribute('role', 'status');
     caixa.setAttribute('aria-live', 'polite');
 
-    var icone = document.createElement('span');
-    icone.className = 'aviso__ico';
-    icone.setAttribute('aria-hidden', 'true');
-    icone.textContent = '✓';
+    /* miniatura do produto: dá credibilidade e peso visual ao aviso */
+    var capa = document.createElement('img');
+    capa.className = 'aviso__capa';
+    capa.src = '/assets/img/livro-buttercreampro.webp';
+    capa.alt = '';
+    capa.loading = 'lazy';
+    capa.setAttribute('aria-hidden', 'true');
 
-    texto = document.createElement('p');
-    texto.className = 'aviso__txt';
+    var corpo = document.createElement('div');
+    corpo.className = 'aviso__corpo';
+    texto = corpo;
 
     var fechar = document.createElement('button');
     fechar.className = 'aviso__fechar';
@@ -85,8 +89,8 @@
       clearTimeout(timerEntrada);     /* fechou uma vez: não insiste mais */
     });
 
-    caixa.appendChild(icone);
-    caixa.appendChild(texto);
+    caixa.appendChild(capa);
+    caixa.appendChild(corpo);
     caixa.appendChild(fechar);
     document.body.appendChild(caixa);
   }
@@ -96,9 +100,12 @@
     var cidade = sorteiaDiferente(CIDADES, ultimaCidade);
     ultimoNome = nome; ultimaCidade = cidade;
 
-    texto.innerHTML = '<strong></strong><span></span>';
-    texto.firstChild.textContent = nome + ' acabou de comprar';
-    texto.lastChild.textContent = cidade[0] + ' — ' + cidade[1];
+    texto.innerHTML =
+      '<span class="aviso__top"><i class="aviso__pulso"></i>Compra confirmada</span>' +
+      '<strong class="aviso__nome"></strong>' +
+      '<span class="aviso__onde"></span>';
+    texto.querySelector('.aviso__nome').textContent = nome + ' acabou de comprar';
+    texto.querySelector('.aviso__onde').textContent = cidade[0] + ', ' + cidade[1];
 
     caixa.classList.add('is-visivel');
     clearTimeout(timerSaida);
