@@ -353,3 +353,11 @@ h1, h2, h3 {
   color: #e8c87a;
   text-align: center;
 }
+
+/* foto unica da autora: substituiu as duas (Karen + fachada) */
+.author__foto--unica { max-width: 100%; }
+.author__foto--unica img {
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: 16px;
+}
