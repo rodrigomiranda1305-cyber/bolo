@@ -283,3 +283,40 @@ h1, h2, h3 {
   .admini__item { padding: 5px; border-radius: 11px; }
   .admini__titulo { font-size: 11px; letter-spacing: .1em; margin-bottom: 10px; }
 }
+
+/* ===================================== aviso de que o preco volta a subir
+   Era uma linha pequena e discreta. Como ela sustenta a urgencia da
+   oferta, ganhou corpo: a primeira linha chama, a segunda explica.
+   Fica sobre o azul escuro da secao, entao o amarelo e o branco ficam. */
+.offer__sobe {
+  margin: 12px auto 0;
+  max-width: 440px;
+  padding: 11px 16px;
+  border: 1px solid rgb(255 209 102 / .45);
+  border-radius: 12px;
+  background: rgb(255 209 102 / .10);
+  font-size: 15px;
+  line-height: 1.4;
+  text-align: center;
+}
+.offer__sobe-forte {
+  display: block;
+  font-family: "Inter", sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: .01em;
+  color: #ffd166;
+}
+.offer__sobe-fraco {
+  display: block;
+  margin-top: 3px;
+  font-family: "Inter", sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: rgb(255 255 255 / .82);
+}
+@media (max-width: 600px) {
+  .offer__sobe { max-width: 100%; padding: 10px 13px; }
+  .offer__sobe-forte { font-size: 15px; }
+  .offer__sobe-fraco { font-size: 13px; }
+}
