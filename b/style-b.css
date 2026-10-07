@@ -320,3 +320,26 @@ h1, h2, h3 {
   .offer__sobe-forte { font-size: 15px; }
   .offer__sobe-fraco { font-size: 13px; }
 }
+
+/* ============================= "por que e tao barato" — secao da objecao
+   Fundo azul escuro (#16335b): a cor do texto fica a original.
+   Aqui so aumento o titulo e acrescento o olho dourado. */
+.porque__olho {
+  margin: 0 0 10px;
+  font-family: "Inter", sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: #e8c87a;
+  text-align: center;
+}
+.sec--porque .porque__titulo {
+  font-size: clamp(27px, 5.2vw, 42px);
+  line-height: 1.12;
+  letter-spacing: -0.015em;
+  text-align: center;
+}
+@media (max-width: 600px) {
+  .porque__olho { font-size: 11px; letter-spacing: .14em; }
+}
