@@ -343,3 +343,16 @@ h1, h2, h3 {
   object-fit: cover;
   border-radius: 16px;
 }
+
+/* ===================== "o que as receitas comuns nao te ensinam"
+   A secao passou de um paragrafo unico para cinco. Mantive a fonte, o
+   tamanho e a cor que ja estavam; so dei respiro entre os paragrafos e
+   tirei o peso do corpo, senao cinco blocos em semibold viram parede.
+   As duas linhas de remate continuam pesadas, que e onde o olho deve bater. */
+.achieve__text p { margin: 0 0 18px; font-weight: 400; }
+.achieve__text p:last-child { margin-bottom: 0; }
+.achieve__forte { font-weight: 700; color: var(--b-tinta); }
+
+@media (max-width: 767px) {
+  .achieve__text p { margin-bottom: 14px; }
+}
