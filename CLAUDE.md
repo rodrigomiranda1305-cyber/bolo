@@ -72,7 +72,7 @@ Chrome e puppeteer-core já estão instalados:
 - puppeteer: `build/node_modules/puppeteer-core`
 - O import ESM **precisa** da forma `file:///C:/...`, senão o Node recusa:
   ```js
-  import puppeteer from 'file:///C:/Users/rodri/OneDrive/Documentos/BOLO/build/node_modules/puppeteer-core/lib/esm/puppeteer/puppeteer-core.js';
+  import puppeteer from 'file:///C:/Users/rodri/OneDrive/Documentos/GERENTE DE OPERAÇÃO/01 - BUTTERCREAM PRO/9 - SITE/build/node_modules/puppeteer-core/lib/esm/puppeteer/puppeteer-core.js';
   ```
 
 Três pegadinhas que custaram tempo:

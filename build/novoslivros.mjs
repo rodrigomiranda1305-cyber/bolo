@@ -1,7 +1,7 @@
 import puppeteer from 'puppeteer-core';
 import fs from 'fs'; import path from 'path'; import {pathToFileURL} from 'node:url';
 const CHROME='C:/Program Files/Google/Chrome/Application/chrome.exe';
-const R='C:/Users/rodri/OneDrive/Documentos/BOLO';
+const R='C:/Users/rodri/OneDrive/Documentos/GERENTE DE OPERAÇÃO/01 - BUTTERCREAM PRO/9 - SITE';
 const MAPA=[
  ['Mini Livro de Donuts Coloridos.png','livro-mini-donuts'],
  ['Mini Livro de Bolos Caseiros.png','livro-bolos-caseiros'],

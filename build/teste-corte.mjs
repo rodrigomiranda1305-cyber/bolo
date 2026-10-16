@@ -1,7 +1,7 @@
 import puppeteer from 'puppeteer-core';
 import fs from 'fs'; import path from 'path'; import {pathToFileURL} from 'node:url';
 const CHROME='C:/Program Files/Google/Chrome/Application/chrome.exe';
-const R='C:/Users/rodri/OneDrive/Documentos/BOLO/Novos depoimentoss';
+const R='C:/Users/rodri/OneDrive/Documentos/GERENTE DE OPERAÇÃO/01 - BUTTERCREAM PRO/9 - SITE/Novos depoimentoss';
 const LARGAS=[
  ['Nova pasta virais/Antes e Depois do Brownie Gourmet.png',     't-brownie'],
  ['Nova pasta virais/Antes e Depois_ Torta Cookie Perfeita.png', 't-torta'],

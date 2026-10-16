@@ -1,7 +1,7 @@
 import puppeteer from 'puppeteer-core';
 import fs from 'fs'; import path from 'path'; import {pathToFileURL} from 'node:url';
 const CHROME='C:/Program Files/Google/Chrome/Application/chrome.exe';
-const R='C:/Users/rodri/OneDrive/Documentos/BOLO/Novos depoimentoss';
+const R='C:/Users/rodri/OneDrive/Documentos/GERENTE DE OPERAÇÃO/01 - BUTTERCREAM PRO/9 - SITE/Novos depoimentoss';
 const b=await puppeteer.launch({executablePath:CHROME,headless:'new',args:['--no-sandbox','--allow-file-access-from-files']});
 const p=await b.newPage();
 fs.writeFileSync('_t2.html','<img id=i><canvas id=c></canvas>');
