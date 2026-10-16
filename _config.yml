@@ -5,4 +5,5 @@
 exclude:
   - build
   - README.md
+  - CLAUDE.md
   - .gitignore
