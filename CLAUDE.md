@@ -119,7 +119,7 @@ meça o contraste depois.
 
 Conferido em **07/10/2026**.
 
-- **Principal:** ButtercreamPro 3.0 por **R$ 37,00** (teste desde 17/10/2026; antes R$ 19,90), ancorado em R$ 199,90.
+- **Principal:** ButtercreamPro 3.0 por **R$ 37,00** (teste desde 17/10/2026; antes R$ 19,90), ancorado em R$ 369,90 (90% de desconto).
   Checkout: `https://buttercreampro.pay.yampi.com.br/r/MUZPSBOTKS`
   (fica no `b/config.js`, é o destino único de todos os CTAs).
   **Nunca mexa no preço do principal sem ele pedir.**
